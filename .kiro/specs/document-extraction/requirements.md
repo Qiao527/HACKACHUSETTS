@@ -80,6 +80,7 @@ The output of extraction is a list of `InputField` objects as defined in the fro
 3. WHEN a Roof_Age_Field is `missing`, THE Extraction_System SHALL set that field's `request` to a non-empty string instructing the reader to obtain roofing records and to not infer roof age from building construction.
 4. WHEN a Roof_Age_Field is `missing`, THE Extraction_System SHALL leave `value`, `value_range`, and `evidence` unset for that field.
 5. WHEN a `building_construction_year` value is present and the Demo_Document contains no explicit roof installation or replacement date, THE Extraction_System SHALL set each Roof_Age_Field status to `missing` and SHALL leave each Roof_Age_Field `value` and `value_range` unset.
+6. WHEN a Roof_Age_Field has a `value` or `value_range` set and its status is not `missing`, THE Extraction_System SHALL require that field to carry supporting `evidence`, and SHALL NOT report a present Roof_Age_Field value without accompanying evidence.
 
 ### Requirement 5: Validation is idempotent
 

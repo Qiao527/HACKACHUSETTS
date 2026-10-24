@@ -1,8 +1,14 @@
 """Shared data contract for SolarAlign. FROZEN at 12:30.
 
-Owner: A (engine lead). To change: ask A, post in the team chat, log it in the
-Contract tab change log. Every module (engine, extract, coordinator, API, UI)
+Owner: backend owner. To change: ask the backend owner, post in the team chat,
+log it in the Contract tab change log. Every module (engine, extract, coordinator, API, UI)
 depends on these shapes.
+
+Change log (approved by contract owner):
+- Added InputField.text_value (Optional[str]) for non-numeric values such as
+  ISO 8601 dates, text, and "true"/"false". Numeric values stay in `value`.
+- Added EngineInput.escalation_rate (float >= 0, default 0.0): annual real
+  escalation of electricity value.
 """
 from typing import Literal, Optional
 
@@ -26,6 +32,7 @@ class InputField(BaseModel):
     """Every input carries its evidence and status."""
     field: str                            # e.g. "roof_remaining_life_years"
     value: Optional[float] = None         # None when missing
+    text_value: Optional[str] = None      # non-numeric: ISO 8601 date, text, "true"/"false"
     value_range: Optional[tuple[float, float]] = None  # keep ranges as ranges
     unit: str
     status: Status
@@ -49,6 +56,7 @@ class EngineInput(BaseModel):
     horizon_years: int = Field(ge=1)
     discount_rate: float = Field(ge=0)
     degradation: float = Field(ge=0, lt=1)
+    escalation_rate: float = Field(default=0.0, ge=0)  # annual real escalation of electricity value
 
 
 class YearSplit(BaseModel):
