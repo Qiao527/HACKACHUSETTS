@@ -22,14 +22,16 @@ function EvidenceBody() {
 
   return (
     <div>
-      <div className="mb-5 flex flex-wrap items-center gap-2">
-        <span className="badge border-warn text-warn bg-[#9a6a0014]">
-          ◆ Sample diligence document (synthetic): demo_pca.pdf
-        </span>
-        <span className="badge border-warn text-warn bg-[#9a6a0014]">
-          ◆ Harbor Loom Warehouse is a fictional building
-        </span>
+      <div
+        className="mb-6 rounded-md bg-lavender px-4 py-3 text-sm text-ink"
+        role="note"
+        style={{ borderLeft: '3px solid #5266eb' }}
+      >
+        <span style={{ fontWeight: 460 }}>Demo data:</span> Harbor Loom Warehouse is
+        fictional, and <span className="whitespace-nowrap">demo_pca.pdf</span> is a
+        synthetic diligence report.
       </div>
+
       <div className="grid gap-4 md:grid-cols-2">
         {FIELDS.map(({ key, display }) => (
           <ProvenanceField
@@ -42,12 +44,14 @@ function EvidenceBody() {
           />
         ))}
       </div>
+
       <p className="mt-6 text-sm text-ink-secondary">
-        Each fact carries a page number and an exact quote. The AI extracts; the
-        code validates that the quote truly appears on the cited page. A field with
-        no valid citation becomes “missing,” never a guess. Roof age is never
-        inferred from the building’s construction year.
+        This page uses preloaded demo data. Report facts retain their page number and
+        exact source quote. The citation validator checks that each quote appears on
+        the cited page; a fact without a valid citation becomes “missing,” never a
+        guess. Roof age is never inferred from the building’s construction year.
       </p>
+
       <div className="mt-6 no-print">
         <a href="/timing" className="pill pill-primary">
           Next: compare timing →
@@ -62,7 +66,7 @@ export default function EvidencePage() {
     <DemoShell
       current="/evidence"
       title="Review the evidence"
-      intro="Facts extracted from a synthetic roof report, each traced to a page and a quote. Confirm what’s right, fix what isn’t."
+      intro="Review the preloaded demo evidence and modeled inputs. Confirm what’s right, and edit what needs correction."
     >
       <ScenarioGate>
         <EvidenceBody />
