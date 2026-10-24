@@ -17,7 +17,7 @@ Climatech & Clean Energy (challenge: cleaner, more affordable buildings)
 - Zaiqiao Long
 - Taein Kang
 
-Representative: _[to be designated and authorized by the team before submission]_
+Representative: Zaiqiao Long
 
 ## Links
 - Live demo (no login): https://solaralign2.vercel.app
