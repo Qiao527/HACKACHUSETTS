@@ -106,6 +106,10 @@ We built SolarAlign with Kiro IDE and verified it with Kiro CLI: **eight steerin
 | `tests/` | Python unit, reference, property-based, and integration tests |
 | `docs/` | Kiro evidence, design notes, and internal submission materials |
 
+## Team
+
+Hackachusetts 2026 team (four members): **Rahma Wadood**, **David Slavtcheff**, **Zaiqiao Long**, and **Taein Kang**.
+
 ## Assumptions and limits
 
 The model uses a **fictional demonstration property** and recorded/reference inputs informed by Boston Assessing FY2026 data, NREL PVWatts V8, U.S. DOE solar cost benchmarks, and MassCEC landlord–tenant guidance. See [policy sources and assumptions](data/policy_constants.json). Incentives, lease rights, utility metering, roof access, and tenant consent need independent verification; the model does **not** establish SMART/48E eligibility or provide legal advice.
