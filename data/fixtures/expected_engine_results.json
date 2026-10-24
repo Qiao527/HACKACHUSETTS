@@ -1,0 +1,478 @@
+{
+  "model_version": "solaralign-reference-1.1",
+  "tolerance_usd": 0.01,
+  "cases": [
+    {
+      "id": "canonical_defaults",
+      "inputs": {
+        "annual_kwh": 245753,
+        "system_kw_dc": 200,
+        "capex_per_w_dc": 2.13,
+        "om_per_kw_year": 21,
+        "electricity_value_per_kwh": 0.2411,
+        "roof_replacement_year": 3,
+        "roof_replacement_cost": 300000,
+        "removal_reinstall_cost": 75000,
+        "downtime_fraction": 0.05,
+        "unallocated_share": 0,
+        "tenant_share": 0.0,
+        "horizon_years": 25,
+        "discount_rate": 0.068,
+        "degradation": 0.007,
+        "escalation_rate": 0.0
+      },
+      "expected": {
+        "solar_now_remove_later": {
+          "owner_npv": 122246.28,
+          "tenant_first_full_year_savings": 0.0,
+          "first_full_year": 1,
+          "break_even_removal_cost": 223918.76,
+          "break_even_status": "nonnegative_npv_root",
+          "mutual_benefit_range": [
+            8.43866901936759e-08,
+            0.18531910395091353
+          ]
+        },
+        "roof_and_solar_now": {
+          "owner_npv": 132478.94,
+          "tenant_first_full_year_savings": 0.0,
+          "first_full_year": 1,
+          "break_even_removal_cost": null,
+          "break_even_status": "not_applicable",
+          "mutual_benefit_range": [
+            8.43866901936759e-08,
+            0.20010384555874264
+          ]
+        },
+        "roof_then_solar": {
+          "owner_npv": 129350.79,
+          "tenant_first_full_year_savings": 0.0,
+          "first_full_year": 4,
+          "break_even_removal_cost": null,
+          "break_even_status": "not_applicable",
+          "mutual_benefit_range": [
+            8.43866901936759e-08,
+            0.24979482079617746
+          ]
+        }
+      }
+    },
+    {
+      "id": "comparison_10pct",
+      "inputs": {
+        "annual_kwh": 245753,
+        "system_kw_dc": 200,
+        "capex_per_w_dc": 2.13,
+        "om_per_kw_year": 21,
+        "electricity_value_per_kwh": 0.2411,
+        "roof_replacement_year": 3,
+        "roof_replacement_cost": 300000,
+        "removal_reinstall_cost": 75000,
+        "downtime_fraction": 0.05,
+        "unallocated_share": 0,
+        "tenant_share": 0.1,
+        "horizon_years": 25,
+        "discount_rate": 0.068,
+        "degradation": 0.007,
+        "escalation_rate": 0.0
+      },
+      "expected": {
+        "solar_now_remove_later": {
+          "owner_npv": 56280.97,
+          "tenant_first_full_year_savings": 5925.11,
+          "first_full_year": 1,
+          "break_even_removal_cost": 143560.71,
+          "break_even_status": "nonnegative_npv_root",
+          "mutual_benefit_range": [
+            8.43866901936759e-08,
+            0.18531910395091353
+          ]
+        },
+        "roof_and_solar_now": {
+          "owner_npv": 66273.83,
+          "tenant_first_full_year_savings": 5925.11,
+          "first_full_year": 1,
+          "break_even_removal_cost": null,
+          "break_even_status": "not_applicable",
+          "mutual_benefit_range": [
+            8.43866901936759e-08,
+            0.20010384555874264
+          ]
+        },
+        "roof_then_solar": {
+          "owner_npv": 77567.96,
+          "tenant_first_full_year_savings": 5925.11,
+          "first_full_year": 4,
+          "break_even_removal_cost": null,
+          "break_even_status": "not_applicable",
+          "mutual_benefit_range": [
+            8.43866901936759e-08,
+            0.24979482079617746
+          ]
+        }
+      }
+    },
+    {
+      "id": "zone_exists",
+      "inputs": {
+        "annual_kwh": 245753,
+        "system_kw_dc": 200,
+        "capex_per_w_dc": 2.13,
+        "om_per_kw_year": 21,
+        "electricity_value_per_kwh": 0.2411,
+        "roof_replacement_year": 4,
+        "roof_replacement_cost": 300000,
+        "removal_reinstall_cost": 75000,
+        "downtime_fraction": 0.05,
+        "unallocated_share": 0,
+        "tenant_share": 0.18,
+        "horizon_years": 25,
+        "discount_rate": 0.068,
+        "degradation": 0.007,
+        "escalation_rate": 0.0
+      },
+      "expected": {
+        "solar_now_remove_later": {
+          "owner_npv": 7566.83,
+          "tenant_first_full_year_savings": 10665.19,
+          "first_full_year": 1,
+          "break_even_removal_cost": 84844.62,
+          "break_even_status": "nonnegative_npv_root",
+          "mutual_benefit_range": [
+            8.43866901936759e-08,
+            0.19146798881028226
+          ]
+        },
+        "roof_and_solar_now": {
+          "owner_npv": -2370.19,
+          "tenant_first_full_year_savings": 10665.19,
+          "first_full_year": 1,
+          "break_even_removal_cost": null,
+          "break_even_status": "not_applicable",
+          "mutual_benefit_range": [
+            8.43866901936759e-08,
+            0.1764199213465424
+          ]
+        },
+        "roof_then_solar": {
+          "owner_npv": 27021.19,
+          "tenant_first_full_year_savings": 10665.19,
+          "first_full_year": 5,
+          "break_even_removal_cost": null,
+          "break_even_status": "not_applicable",
+          "mutual_benefit_range": [
+            8.43866901936759e-08,
+            0.23681310289015975
+          ]
+        }
+      }
+    },
+    {
+      "id": "closer_roof",
+      "inputs": {
+        "annual_kwh": 245753,
+        "system_kw_dc": 200,
+        "capex_per_w_dc": 2.13,
+        "om_per_kw_year": 21,
+        "electricity_value_per_kwh": 0.2411,
+        "roof_replacement_year": 2,
+        "roof_replacement_cost": 300000,
+        "removal_reinstall_cost": 75000,
+        "downtime_fraction": 0.05,
+        "unallocated_share": 0,
+        "tenant_share": 0.18,
+        "horizon_years": 25,
+        "discount_rate": 0.068,
+        "degradation": 0.007,
+        "escalation_rate": 0.0
+      },
+      "expected": {
+        "solar_now_remove_later": {
+          "owner_npv": -826.32,
+          "tenant_first_full_year_savings": 10665.19,
+          "first_full_year": 1,
+          "break_even_removal_cost": 74057.48,
+          "break_even_status": "nonnegative_npv_root",
+          "mutual_benefit_range": [
+            8.43866901936759e-08,
+            0.17874702778494753
+          ]
+        },
+        "roof_and_solar_now": {
+          "owner_npv": 30055.98,
+          "tenant_first_full_year_savings": 10665.19,
+          "first_full_year": 1,
+          "break_even_removal_cost": null,
+          "break_even_status": "not_applicable",
+          "mutual_benefit_range": [
+            8.43866901936759e-08,
+            0.2253982840810416
+          ]
+        },
+        "roof_then_solar": {
+          "owner_npv": 45825.8,
+          "tenant_first_full_year_savings": 10665.19,
+          "first_full_year": 3,
+          "break_even_removal_cost": null,
+          "break_even_status": "not_applicable",
+          "mutual_benefit_range": [
+            8.43866901936759e-08,
+            0.2614185740168317
+          ]
+        }
+      }
+    },
+    {
+      "id": "no_generation",
+      "inputs": {
+        "annual_kwh": 0,
+        "system_kw_dc": 200,
+        "capex_per_w_dc": 2.13,
+        "om_per_kw_year": 21,
+        "electricity_value_per_kwh": 0.2411,
+        "roof_replacement_year": 3,
+        "roof_replacement_cost": 300000,
+        "removal_reinstall_cost": 75000,
+        "downtime_fraction": 0.05,
+        "unallocated_share": 0,
+        "tenant_share": 0.0,
+        "horizon_years": 25,
+        "discount_rate": 0.068,
+        "degradation": 0.007,
+        "escalation_rate": 0.0
+      },
+      "expected": {
+        "solar_now_remove_later": {
+          "owner_npv": -537406.62,
+          "tenant_first_full_year_savings": 0.0,
+          "first_full_year": 1,
+          "break_even_removal_cost": null,
+          "break_even_status": "owner_negative_even_with_free_removal",
+          "mutual_benefit_range": null
+        },
+        "roof_and_solar_now": {
+          "owner_npv": -529571.96,
+          "tenant_first_full_year_savings": 0.0,
+          "first_full_year": 1,
+          "break_even_removal_cost": null,
+          "break_even_status": "not_applicable",
+          "mutual_benefit_range": null
+        },
+        "roof_then_solar": {
+          "owner_npv": -388477.33,
+          "tenant_first_full_year_savings": 0.0,
+          "first_full_year": 4,
+          "break_even_removal_cost": null,
+          "break_even_status": "not_applicable",
+          "mutual_benefit_range": null
+        }
+      }
+    },
+    {
+      "id": "unallocated_all",
+      "inputs": {
+        "annual_kwh": 245753,
+        "system_kw_dc": 200,
+        "capex_per_w_dc": 2.13,
+        "om_per_kw_year": 21,
+        "electricity_value_per_kwh": 0.2411,
+        "roof_replacement_year": 4,
+        "roof_replacement_cost": 300000,
+        "removal_reinstall_cost": 75000,
+        "downtime_fraction": 0.05,
+        "unallocated_share": 1,
+        "tenant_share": 0.18,
+        "horizon_years": 25,
+        "discount_rate": 0.068,
+        "degradation": 0.007,
+        "escalation_rate": 0.0
+      },
+      "expected": {
+        "solar_now_remove_later": {
+          "owner_npv": -533486.63,
+          "tenant_first_full_year_savings": 0.0,
+          "first_full_year": 1,
+          "break_even_removal_cost": null,
+          "break_even_status": "owner_negative_even_with_free_removal",
+          "mutual_benefit_range": null
+        },
+        "roof_and_solar_now": {
+          "owner_npv": -545251.93,
+          "tenant_first_full_year_savings": 0.0,
+          "first_full_year": 1,
+          "break_even_removal_cost": null,
+          "break_even_status": "not_applicable",
+          "mutual_benefit_range": null
+        },
+        "roof_then_solar": {
+          "owner_npv": -362983.55,
+          "tenant_first_full_year_savings": 0.0,
+          "first_full_year": 5,
+          "break_even_removal_cost": null,
+          "break_even_status": "not_applicable",
+          "mutual_benefit_range": null
+        }
+      }
+    },
+    {
+      "id": "roof_today",
+      "inputs": {
+        "annual_kwh": 245753,
+        "system_kw_dc": 200,
+        "capex_per_w_dc": 2.13,
+        "om_per_kw_year": 21,
+        "electricity_value_per_kwh": 0.2411,
+        "roof_replacement_year": 0,
+        "roof_replacement_cost": 300000,
+        "removal_reinstall_cost": 75000,
+        "downtime_fraction": 0.05,
+        "unallocated_share": 0,
+        "tenant_share": 0.18,
+        "horizon_years": 25,
+        "discount_rate": 0.068,
+        "degradation": 0.007,
+        "escalation_rate": 0.0
+      },
+      "expected": {
+        "solar_now_remove_later": {
+          "owner_npv": 67042.05,
+          "tenant_first_full_year_savings": 10665.19,
+          "first_full_year": 1,
+          "break_even_removal_cost": null,
+          "break_even_status": "not_applicable",
+          "mutual_benefit_range": [
+            8.43866901936759e-08,
+            0.281264204129434
+          ]
+        },
+        "roof_and_solar_now": {
+          "owner_npv": 67042.05,
+          "tenant_first_full_year_savings": 10665.19,
+          "first_full_year": 1,
+          "break_even_removal_cost": null,
+          "break_even_status": "not_applicable",
+          "mutual_benefit_range": [
+            8.43866901936759e-08,
+            0.281264204129434
+          ]
+        },
+        "roof_then_solar": {
+          "owner_npv": 67042.05,
+          "tenant_first_full_year_savings": 10665.19,
+          "first_full_year": 1,
+          "break_even_removal_cost": null,
+          "break_even_status": "not_applicable",
+          "mutual_benefit_range": [
+            8.43866901936759e-08,
+            0.281264204129434
+          ]
+        }
+      }
+    },
+    {
+      "id": "replacement_after_horizon",
+      "inputs": {
+        "annual_kwh": 245753,
+        "system_kw_dc": 200,
+        "capex_per_w_dc": 2.13,
+        "om_per_kw_year": 21,
+        "electricity_value_per_kwh": 0.2411,
+        "roof_replacement_year": 30,
+        "roof_replacement_cost": 300000,
+        "removal_reinstall_cost": 75000,
+        "downtime_fraction": 0.05,
+        "unallocated_share": 0,
+        "tenant_share": 0.18,
+        "horizon_years": 25,
+        "discount_rate": 0.068,
+        "degradation": 0.007,
+        "escalation_rate": 0.0
+      },
+      "expected": {
+        "solar_now_remove_later": {
+          "owner_npv": 67042.05,
+          "tenant_first_full_year_savings": 10665.19,
+          "first_full_year": 1,
+          "break_even_removal_cost": null,
+          "break_even_status": "not_applicable",
+          "mutual_benefit_range": [
+            8.43866901936759e-08,
+            0.281264204129434
+          ]
+        },
+        "roof_and_solar_now": {
+          "owner_npv": -232957.95,
+          "tenant_first_full_year_savings": 10665.19,
+          "first_full_year": 1,
+          "break_even_removal_cost": null,
+          "break_even_status": "not_applicable",
+          "mutual_benefit_range": null
+        },
+        "roof_then_solar": {
+          "owner_npv": 0.0,
+          "tenant_first_full_year_savings": 0.0,
+          "first_full_year": null,
+          "break_even_removal_cost": null,
+          "break_even_status": "not_applicable",
+          "mutual_benefit_range": null
+        }
+      }
+    },
+    {
+      "id": "zero_tenant_share",
+      "inputs": {
+        "annual_kwh": 245753,
+        "system_kw_dc": 200,
+        "capex_per_w_dc": 2.13,
+        "om_per_kw_year": 21,
+        "electricity_value_per_kwh": 0.2411,
+        "roof_replacement_year": 4,
+        "roof_replacement_cost": 300000,
+        "removal_reinstall_cost": 75000,
+        "downtime_fraction": 0.05,
+        "unallocated_share": 0,
+        "tenant_share": 0,
+        "horizon_years": 25,
+        "discount_rate": 0.068,
+        "degradation": 0.007,
+        "escalation_rate": 0.0
+      },
+      "expected": {
+        "solar_now_remove_later": {
+          "owner_npv": 126334.66,
+          "tenant_first_full_year_savings": 0.0,
+          "first_full_year": 1,
+          "break_even_removal_cost": 239364.32,
+          "break_even_status": "nonnegative_npv_root",
+          "mutual_benefit_range": [
+            8.43866901936759e-08,
+            0.19146798881028226
+          ]
+        },
+        "roof_and_solar_now": {
+          "owner_npv": 116798.97,
+          "tenant_first_full_year_savings": 0.0,
+          "first_full_year": 1,
+          "break_even_removal_cost": null,
+          "break_even_status": "not_applicable",
+          "mutual_benefit_range": [
+            8.43866901936759e-08,
+            0.1764199213465424
+          ]
+        },
+        "roof_then_solar": {
+          "owner_npv": 112631.99,
+          "tenant_first_full_year_savings": 0.0,
+          "first_full_year": 5,
+          "break_even_removal_cost": null,
+          "break_even_status": "not_applicable",
+          "mutual_benefit_range": [
+            8.43866901936759e-08,
+            0.23681310289015975
+          ]
+        }
+      }
+    }
+  ],
+  "assumptions_sha256": "6f167249ef94932c2db5c0b9910e435b8a66571d8859aea28b8993e35065609c"
+}
