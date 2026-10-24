@@ -4,7 +4,7 @@
 
 **Hackachusetts 2026 · Climatech & Clean Energy · Built with Kiro**
 
-[**Explore the live demo**](https://solaralign2.vercel.app/) · [**How we used Kiro**](docs/HOW_KIRO_WAS_USED.md) · [**Synthetic roof report**](data/demo_documents/demo_pca.pdf)
+[**Explore the live demo**](https://solaralign2.vercel.app/) · [**Demo video**](#) · [**How we used Kiro**](docs/HOW_KIRO_WAS_USED.md) · [**Synthetic roof report**](data/demo_documents/demo_pca.pdf)
 
 ## The problem
 
@@ -85,13 +85,12 @@ npm run build
 
 ## Kiro and engineering evidence
 
-Kiro was used for steering rules, implementation work, regression testing, and independent CLI verification. A documented extraction-validation defect was reproduced and covered by new tests. The repository contains **eight steering documents**, **five configured hooks**, and the observations supporting the Kiro write-up. Only **one hook was independently observed firing** during the documented audit; unverified capabilities are not represented as used.
+We built SolarAlign with Kiro IDE and verified it with Kiro CLI: **eight steering documents** (all four inclusion modes), a **requirements-first spec** for document extraction (requirements, design with correctness properties, tasks), **five hooks**, and **Hypothesis property-based tests** (79 Python + 30 frontend tests pass). Kiro found and helped fix a citation-validator defect that accepted an invented roof cost; the fix is covered by property tests and a mutation check.
 
-- [**How Kiro Was Used** — evidence-backed engineering write-up](docs/HOW_KIRO_WAS_USED.md)
-- [Kiro steering rules](.kiro/steering/) · [Hooks](.kiro/hooks/) · [Document extraction requirements](.kiro/specs/document-extraction/requirements.md)
+- [**How Kiro Was Used**](docs/HOW_KIRO_WAS_USED.md) — strategy, spec, hooks, steering, PBT, spec vs. vibe
+- [**Kiro usage log**](docs/KIRO_USAGE_LOG.md) — every claim in the write-up, row by row · [detailed evidence audit](docs/KIRO_EVIDENCE_AUDIT.md)
+- [Steering](.kiro/steering/) · [Hooks](.kiro/hooks/) · [Document-extraction spec](.kiro/specs/document-extraction/) · [MCP config](.kiro/settings/mcp.json)
 - [Deterministic engine reference cases](data/fixtures/expected_engine_results.json)
-
-The write-up includes point-in-time Git/PR states and clearly separates verified, recorded, and unverified claims. See the [current pull requests](https://github.com/Qiao527/HACKACHUSETTS/pulls) for live status.
 
 ## Repository guide
 
