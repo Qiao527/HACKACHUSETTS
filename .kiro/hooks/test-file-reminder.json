@@ -4,7 +4,7 @@
     {
       "name": "New core module needs a property test",
       "description": "Agent action: when a new module is created in src/engine, src/extract or src/coordinator, ask Kiro to create its property-test file.",
-      "trigger": "FileCreate",
+      "trigger": "PostFileCreate",
       "matcher": "src/(engine|extract|coordinator)/[^/]+\\.py$",
       "action": {
         "type": "agent",
