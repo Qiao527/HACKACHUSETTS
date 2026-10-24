@@ -1,0 +1,12 @@
+{
+  "_meta": {
+    "description": "Synthetic roof/diligence report page text for Demo Property A. SYNTHETIC: not a real building report. Used as recorded page text so extraction tests never read a binary PDF or call an LLM.",
+    "source_type": "synthetic_document",
+    "document_id": "demo_roof_report.pdf"
+  },
+  "pages": [
+    "Demo Property A — Roof and Envelope Diligence Report (SYNTHETIC SAMPLE). Prepared for demonstration only. Report date: March 14, 2026. This report summarizes a visual assessment of the existing roof assembly.",
+    "Section 2 — Roof condition. The existing single-ply membrane shows typical wear for its service period. Remaining useful life of the existing membrane is estimated at 7 to 9 years. No active leaks were observed at the time of the visit.",
+    "Section 3 — Budgetary costs. Budgetary cost to replace the roof assembly is approximately $360,000. Allowance to remove and reinstall a rooftop array during membrane replacement is $85,000. Inspection limitations: the assessment was visual only; no core samples or moisture scans were performed. Electricity for tenant spaces is billed directly to each tenant by the utility."
+  ]
+}

@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  background: #fbfcfd; /* canvas */
+  color: #28253b; /* ink */
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Light-weight type scale per DESIGN.md (hierarchy from size + colour). */
+.display {
+  font-size: clamp(34px, 5vw, 52px);
+  font-weight: 480;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+}
+.h1 {
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 480;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+}
+.h2 {
+  font-size: 28px;
+  font-weight: 480;
+  line-height: 1.2;
+  letter-spacing: 0.015em;
+}
+.lead {
+  font-size: 22px;
+  font-weight: 460;
+  line-height: 1.25;
+}
+.eyebrow {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Secondary action pills: translucent, generous capsule corners. */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 40px;
+  font-weight: 420;
+  transition: background-color 0.15s ease;
+}
+.pill-primary {
+  background: #5266eb;
+  color: #fff;
+  border-radius: 32px;
+}
+.pill-primary:hover {
+  background: #4557d6;
+}
+.pill-tint {
+  background: rgba(82, 102, 235, 0.1);
+  color: #28253b;
+}
+.pill-tint:hover {
+  background: rgba(82, 102, 235, 0.18);
+}
+.pill-glass {
+  background: rgba(175, 178, 206, 0.2);
+  color: #ededf3;
+}
+.pill-glass:hover {
+  background: rgba(175, 178, 206, 0.3);
+}
+
+/* Visible focus for keyboard users (accessibility). */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid #5266eb;
+  outline-offset: 2px;
+}
+
+/* Status badges: colour PLUS text/shape, never colour alone. */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+}
+
+/* Print: one clean page for the brief. */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+  }
+  .brief-page {
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+  }
+  .page-break {
+    page-break-before: always;
+  }
+}
