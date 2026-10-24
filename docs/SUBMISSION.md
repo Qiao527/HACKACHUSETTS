@@ -12,11 +12,12 @@ Shows why profitable rooftop solar stalls on older multi-tenant buildings: who p
 Climatech & Clean Energy (challenge: cleaner, more affordable buildings)
 
 ## Team members
-- Qiao (Zaiqiao) Long — backend (engine, extraction, coordinator, API), data contract, Kiro log, video, submission
-- _[teammate name]_ — frontend, Vercel deploy, site testing
-- _[teammate name]_ — _[role]_
+- Rahma Wadood
+- David Slavtcheff
+- Zaiqiao Long
+- Taein Kang
 
-Representative: _[name of the person submitting]_
+Representative: _[to be designated and authorized by the team before submission]_
 
 ## Links
 - Live demo (no login): https://solaralign2.vercel.app
@@ -76,8 +77,8 @@ Record the live site in a clean browser window. Narrate in English. No music, or
 | 2:20–2:45 | Kiro: steering panel, the spec (requirements → design → tasks), the hooks panel, the PR #3 test diff | "We built it with Kiro: steering rules next to the code they govern, a requirements-first spec that caught bugs before code, property tests that caught an invented 999,999, and hooks that guard our rules on every write. SolarAlign shows why a sunny roof is not enough: the deal has to fit the roof's lifecycle and the people who pay and benefit." |
 
 ## Final checklist before pressing Submit
-- [ ] Extraction spec v2 (`design.md`, `tasks.md`, updated `requirements.md`) is pushed to `main` under `.kiro/specs/document-extraction/`
+- [x] Extraction spec v2 (`design.md`, `tasks.md`, updated `requirements.md`) is published in `main` under `.kiro/specs/document-extraction/`
 - [ ] Live demo works in an incognito window, including Generate proposal (LLM key set in Vercel)
 - [ ] Video is under 3:00 and **public** on YouTube; link pasted in the form and in the README
 - [ ] All team members added; track = Climatech & Clean Energy
-- [ ] `grep -n kiro .gitignore` returns nothing
+- [ ] Confirm `.kiro/` is tracked and not ignored. (The `.gitignore` contains a protective comment mentioning `.kiro`, not an ignore pattern.)
