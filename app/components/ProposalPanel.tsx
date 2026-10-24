@@ -1,31 +1,81 @@
 'use client';
-
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { coordinate } from '../lib/api';
 import type { CoordinatorOutput, EngineResult, Language } from '../lib/contract';
 import { pct } from '../lib/format';
+import { LatestRequest } from '../lib/latest-request';
 import { LegalLabels } from './Badges';
 
-// AI coordinator panel. It reads only the EngineResult and copies engine
-// numbers; the backend rejects any invented number. Refreshes only when the
-// user asks (ui-rules.md). en/es toggle switches explanations, not numbers.
-export function ProposalPanel({ result }: { result: EngineResult }) {
+interface Props {
+  result: EngineResult;
+  inputRevision: number;
+}
+
+// AI coordinator panel. It reads only the current EngineResult and copies engine
+// numbers. A client-side input revision, rather than scenario_id, owns each response.
+export function ProposalPanel({ result, inputRevision }: Props) {
   const [language, setLanguage] = useState<Language>('en');
   const [output, setOutput] = useState<CoordinatorOutput | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const requests = useRef(new LatestRequest());
+  const currentRevision = useRef(inputRevision);
+  const currentResult = useRef(result);
+  currentRevision.current = inputRevision;
+  currentResult.current = result;
+
+  useEffect(() => {
+    requests.current.invalidate();
+    setOutput(null);
+    setError(null);
+    setLoading(false);
+    return () => requests.current.invalidate();
+  }, [inputRevision, result]);
 
   async function request(lang: Language) {
+    const requestToken = requests.current.begin();
+    const requestedRevision = inputRevision;
+    const requestedResult = result;
+    setLanguage(lang);
+    setOutput(null);
     setLoading(true);
     setError(null);
+
     try {
-      const out = await coordinate(result, lang);
-      setOutput(out);
-      setLanguage(lang);
+      const nextOutput = await coordinate(requestedResult, lang);
+      if (
+        requests.current.isCurrent(requestToken) &&
+        currentRevision.current === requestedRevision &&
+        currentResult.current === requestedResult
+      ) {
+        setOutput(nextOutput);
+      }
     } catch (e) {
-      setError(e instanceof Error ? e.message : String(e));
+      if (
+        requests.current.isCurrent(requestToken) &&
+        currentRevision.current === requestedRevision &&
+        currentResult.current === requestedResult
+      ) {
+        setError(e instanceof Error ? e.message : String(e));
+      }
     } finally {
-      setLoading(false);
+      if (
+        requests.current.isCurrent(requestToken) &&
+        currentRevision.current === requestedRevision &&
+        currentResult.current === requestedResult
+      ) {
+        setLoading(false);
+      }
+    }
+  }
+
+  function selectLanguage(lang: Language) {
+    if (loading || output) {
+      void request(lang);
+    } else {
+      requests.current.invalidate();
+      setLanguage(lang);
+      setError(null);
     }
   }
 
@@ -43,7 +93,7 @@ export function ProposalPanel({ result }: { result: EngineResult }) {
             type="button"
             className={`pill h-9 ${language === 'en' ? 'pill-primary' : 'pill-tint'}`}
             aria-pressed={language === 'en'}
-            onClick={() => (output ? request('en') : setLanguage('en'))}
+            onClick={() => selectLanguage('en')}
           >
             English
           </button>
@@ -51,7 +101,7 @@ export function ProposalPanel({ result }: { result: EngineResult }) {
             type="button"
             className={`pill h-9 ${language === 'es' ? 'pill-primary' : 'pill-tint'}`}
             aria-pressed={language === 'es'}
-            onClick={() => (output ? request('es') : setLanguage('es'))}
+            onClick={() => selectLanguage('es')}
           >
             Español
           </button>
@@ -63,12 +113,12 @@ export function ProposalPanel({ result }: { result: EngineResult }) {
           <p className="text-sm text-ink-secondary">
             {result.mutual_benefit_range
               ? t(
-                  'The engine found a mutual-benefit zone. Ask the coordinator to propose a share inside it and explain it to both sides.',
-                  'El motor encontró una zona de beneficio mutuo. Pide al coordinador que proponga una proporción dentro de ella y la explique a ambas partes.',
+                  'The engine found a Positive-Outcome Range where both financial metrics are above zero. Ask the coordinator to draft a share inside it. The range does not establish agreement.',
+                  'El motor encontró un rango de resultado positivo donde ambas métricas financieras superan cero. Pide al coordinador que prepare una proporción dentro del rango. El rango no establece un acuerdo.',
                 )
               : t(
-                  'The engine found no mutual-benefit zone. The coordinator will say so and propose nothing.',
-                  'El motor no encontró una zona de beneficio mutuo. El coordinador lo dirá y no propondrá nada.',
+                  'The engine found no Positive-Outcome Range. The coordinator will say so and propose nothing.',
+                  'El motor no encontró un rango de resultado positivo. El coordinador lo indicará y no propondrá nada.',
                 )}
           </p>
           <button
@@ -85,8 +135,8 @@ export function ProposalPanel({ result }: { result: EngineResult }) {
               <br />
               <span className="text-ink-secondary">
                 {t(
-                  'Set LLM_PROVIDER and LLM_API_KEY to enable live explanations. The numbers above are already complete without it.',
-                  'Configura LLM_PROVIDER y LLM_API_KEY para habilitar explicaciones en vivo. Los números anteriores ya están completos sin ello.',
+                  'Set LLM_PROVIDER and LLM_API_KEY to enable live explanations. The financial results are complete without it.',
+                  'Configura LLM_PROVIDER y LLM_API_KEY para habilitar explicaciones en vivo. Los resultados financieros están completos sin ello.',
                 )}
               </span>
             </p>
@@ -96,6 +146,9 @@ export function ProposalPanel({ result }: { result: EngineResult }) {
 
       {output && (
         <div className="mt-4 space-y-4">
+          <span className="badge border-warn bg-[#9a6a0014] text-warn">
+            Draft — Not Mutually Accepted
+          </span>
           {output.proposed_range && (
             <p className="rounded-sm bg-lavender px-3 py-2 text-sm">
               {t('Proposed tenant share:', 'Proporción propuesta para inquilinos:')}{' '}
@@ -117,8 +170,8 @@ export function ProposalPanel({ result }: { result: EngineResult }) {
           <div>
             <p className="eyebrow text-ink-secondary">{t('Terms to confirm', 'Términos a confirmar')}</p>
             <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink-secondary">
-              {output.terms_to_confirm.map((term, i) => (
-                <li key={i}>{term}</li>
+              {output.terms_to_confirm.map((term, index) => (
+                <li key={index}>{term}</li>
               ))}
             </ul>
           </div>

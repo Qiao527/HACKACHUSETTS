@@ -1,7 +1,8 @@
 'use client';
-
 import type { EngineInput, EngineResult, InputField } from '../lib/contract';
+import { SCHEDULE_LABELS } from '../lib/contract';
 import { money, pct } from '../lib/format';
+import { ANALYZED_SCHEDULE } from '../lib/scenario';
 import { LegalLabels, SourceBadge } from './Badges';
 import { ScheduleChart } from './ScheduleChart';
 
@@ -13,9 +14,8 @@ interface Props {
 // One printable page: both stakeholder outcomes, evidence, assumptions, next
 // actions. Print -> PDF via the browser.
 export function BriefLayout({ input, result }: Props) {
-  const sched = result.results.find((r) => r.schedule === 'solar_now_remove_later') ?? result.results[0];
+  const sched = result.results.find((item) => item.schedule === ANALYZED_SCHEDULE);
   const zone = result.mutual_benefit_range;
-
   const facts: InputField[] = [
     input.roof_replacement_year,
     input.roof_replacement_cost,
@@ -23,6 +23,10 @@ export function BriefLayout({ input, result }: Props) {
     input.annual_kwh,
     input.electricity_value_per_kwh,
   ];
+
+  if (!sched) {
+    return <p className="text-danger">The analyzed roof schedule is unavailable.</p>;
+  }
 
   return (
     <article
@@ -35,6 +39,11 @@ export function BriefLayout({ input, result }: Props) {
           <h1 className="h1 mt-1">Rooftop solar — owner &amp; tenant outcomes</h1>
           <p className="mt-1 text-sm text-ink-secondary">
             Harbor Loom Warehouse · fictional multi-tenant warehouse, East Boston · scenario {result.scenario_id}
+          </p>
+          <p className="mt-2 text-sm text-ink-secondary">
+            <span className="eyebrow text-ink-secondary">Analyzed roof schedule</span>
+            <br />
+            <span className="text-ink">{SCHEDULE_LABELS[ANALYZED_SCHEDULE]}</span>
           </p>
         </div>
         <span className="badge border-warn text-warn bg-[#9a6a0014]">◆ synthetic</span>
@@ -52,24 +61,33 @@ export function BriefLayout({ input, result }: Props) {
         </div>
         <div className="rounded-md bg-lavender p-4">
           <p className="eyebrow text-ink-secondary">Tenants</p>
-          <p className="h2 mt-1" style={{ color: sched.tenant_first_full_year_savings > 0 ? '#2f8f5b' : '#554e7b' }}>
+          <p
+            className="h2 mt-1"
+            style={{ color: sched.tenant_first_full_year_savings > 0 ? '#2f8f5b' : '#554e7b' }}
+          >
             {money(sched.tenant_first_full_year_savings)}
           </p>
           <p className="text-xs text-ink-secondary">First full operating year savings</p>
         </div>
       </section>
+      <p className="mt-2 text-xs text-ink-secondary">
+        Owner NPV covers {input.horizon_years} years; tenant savings covers one operating year.
+        Their dollar magnitudes are not directly comparable and are not added together.
+      </p>
 
       <section className="mt-6">
-        <h2 className="eyebrow text-ink-secondary">Mutual-benefit zone</h2>
+        <h2 className="eyebrow text-ink-secondary">Positive-Outcome Range</h2>
         {zone ? (
           <p className="mt-1 text-sm">
-            Both owner and tenants come out positive when the tenant share is between{' '}
-            <strong>{pct(zone[0])}</strong> and <strong>{pct(zone[1])}</strong>.
+            For the analyzed schedule, owner incremental NPV and tenant first-full-year savings are
+            each greater than zero when tenant share is between <strong>{pct(zone[0])}</strong> and{' '}
+            <strong>{pct(zone[1])}</strong>. This does not establish actual owner–tenant agreement.
           </p>
         ) : (
           <p className="mt-1 text-sm text-warn">
-            No tenant share makes both parties positive in this scenario. Allocation
-            redistributes value; it cannot create value.
+            No tenant share makes both financial metrics positive for the analyzed schedule.
+            Allocation redistributes value; it cannot create value, and this result does not decide
+            whether the parties can reach agreement.
           </p>
         )}
       </section>
@@ -84,20 +102,20 @@ export function BriefLayout({ input, result }: Props) {
       <section className="mt-6">
         <h2 className="eyebrow text-ink-secondary">Evidence &amp; assumptions</h2>
         <ul className="mt-2 space-y-2 text-sm">
-          {facts.map((f) => (
-            <li key={f.field} className="flex items-start justify-between gap-3">
+          {facts.map((field) => (
+            <li key={field.field} className="flex items-start justify-between gap-3">
               <span>
-                <strong className="capitalize">{f.field.replace(/_/g, ' ')}:</strong>{' '}
-                {f.value_range
-                  ? `${f.value_range[0]}–${f.value_range[1]} ${f.unit}`
-                  : `${f.value != null ? f.value.toLocaleString('en-US') : '—'} ${f.unit}`}
-                {f.evidence && (
+                <strong className="capitalize">{field.field.replace(/_/g, ' ')}:</strong>{' '}
+                {field.value_range
+                  ? `${field.value_range[0]}–${field.value_range[1]} ${field.unit}`
+                  : `${field.value != null ? field.value.toLocaleString('en-US') : '—'} ${field.unit}`}
+                {field.evidence && (
                   <span className="text-ink-secondary">
-                    {' '}— “{f.evidence.evidence_text}” ({f.evidence.document_id}, p.{f.evidence.page})
+                    {' '}— “{field.evidence.evidence_text}” ({field.evidence.document_id}, p.{field.evidence.page})
                   </span>
                 )}
               </span>
-              {f.evidence && <SourceBadge source={f.evidence.source_type} />}
+              {field.evidence && <SourceBadge source={field.evidence.source_type} />}
             </li>
           ))}
         </ul>

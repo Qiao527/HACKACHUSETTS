@@ -1,7 +1,8 @@
 'use client';
-
 import Link from 'next/link';
-import { ScenarioProvider, useScenario } from './ScenarioProvider';
+import { useRouter } from 'next/navigation';
+import type { MouseEvent } from 'react';
+import { useScenario } from './ScenarioProvider';
 
 const STEPS = [
   { href: '/evidence', label: 'A · Evidence' },
@@ -11,7 +12,7 @@ const STEPS = [
 ];
 
 function StepNav({ current }: { current: string }) {
-  const { recalculating } = useScenario();
+  const { recalculating, error } = useScenario();
   return (
     <div className="flex flex-wrap items-center gap-2 no-print">
       {STEPS.map((s) => (
@@ -29,7 +30,7 @@ function StepNav({ current }: { current: string }) {
         aria-live="polite"
         style={{ minWidth: 90, textAlign: 'right' }}
       >
-        {recalculating ? 'recalculating…' : 'up to date'}
+        {error ? 'update failed' : recalculating ? 'recalculating…' : 'up to date'}
       </span>
     </div>
   );
@@ -46,21 +47,37 @@ export function DemoShell({
   intro: string;
   children: React.ReactNode;
 }) {
+  const router = useRouter();
+
+  // Keep an external-owned legacy workflow anchor on client-side navigation.
+  // Next.js Link handles every navigation owned by this change.
+  function handleInternalNavigation(event: MouseEvent<HTMLDivElement>) {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+      return;
+    }
+    if (!(event.target instanceof Element)) return;
+    const anchor = event.target.closest('a');
+    const href = anchor?.getAttribute('href');
+    if (!anchor || !href?.startsWith('/') || href.startsWith('//') || anchor.target || anchor.hasAttribute('download')) {
+      return;
+    }
+    event.preventDefault();
+    router.push(href);
+  }
+
   return (
-    <ScenarioProvider>
-      <div className="mx-auto max-w-content px-4 py-10 sm:px-8">
-        <StepNav current={current} />
-        <header className="mt-6">
-          <h1 className="h1">{title}</h1>
-          <p className="lead mt-2 max-w-3xl text-ink-secondary">{intro}</p>
-        </header>
-        <div className="mt-8">{children}</div>
-      </div>
-    </ScenarioProvider>
+    <div className="mx-auto max-w-content px-4 py-10 sm:px-8" onClick={handleInternalNavigation}>
+      <StepNav current={current} />
+      <header className="mt-6">
+        <h1 className="h1">{title}</h1>
+        <p className="lead mt-2 max-w-3xl text-ink-secondary">{intro}</p>
+      </header>
+      <div className="mt-8">{children}</div>
+    </div>
   );
 }
 
-// Small helper for pages to render loading/error consistently.
+// Small helper for pages to render initial loading and errors consistently.
 export function ScenarioGate({ children }: { children: React.ReactNode }) {
   const { loading, error } = useScenario();
   if (error)
