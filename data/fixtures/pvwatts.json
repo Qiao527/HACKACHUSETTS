@@ -1,0 +1,40 @@
+{
+  "_meta": {
+    "description": "Cached NREL PVWatts V8 result for the SolarAlign demo building. One fixed system configuration (500 kW DC, Boston lat/lon). Used by default so the app never needs a live API call. Source: NREL PVWatts V8 (https://developer.nrel.gov/docs/solar/pvwatts/).",
+    "source_type": "api_fixture",
+    "retrieved": "2026-10-24"
+  },
+  "inputs": {
+    "system_capacity": "500",
+    "module_type": "0",
+    "losses": "14",
+    "array_type": "1",
+    "tilt": "10",
+    "azimuth": "180",
+    "lat": "42.36",
+    "lon": "-71.06",
+    "dataset": "nsrdb"
+  },
+  "version": "8.5.0",
+  "station_info": {
+    "lat": 42.36999893188477,
+    "lon": -71.05999755859375,
+    "elev": 15.47999954223633,
+    "tz": -5.0,
+    "location": "1340489",
+    "city": "",
+    "state": "Massachusetts",
+    "country": "United States",
+    "weather_data_source": "NSRDB PSM V3 GOES tmy-2020 3.2.0"
+  },
+  "outputs": {
+    "ac_monthly": [
+      33409.96631363396, 39450.44697235656, 57495.12021879823, 60519.23398715042,
+      69783.56485468907, 65071.64310383711, 71963.83114624146, 64392.58801486385,
+      54916.67646421622, 42668.21841271234, 30416.46347200762, 24295.69275844368
+    ],
+    "ac_annual": 614383.4457189512,
+    "solrad_annual": 4.438406111660492,
+    "capacity_factor": 14.02701930865183
+  }
+}

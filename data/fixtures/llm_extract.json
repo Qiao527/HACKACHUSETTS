@@ -1,0 +1,56 @@
+{
+  "_meta": {
+    "description": "Recorded LLM extraction output for roof_report_pages.json. Used by extraction tests so the real LLM is never called. The validator re-checks every quote against the page text regardless of this content.",
+    "source_type": "api_fixture"
+  },
+  "fields": [
+    {
+      "field": "report_date",
+      "value": null,
+      "value_range": null,
+      "unit": "date",
+      "page": 1,
+      "quote": "Report date: March 14, 2026."
+    },
+    {
+      "field": "roof_remaining_life_years",
+      "value": null,
+      "value_range": [7, 9],
+      "unit": "years",
+      "page": 2,
+      "quote": "Remaining useful life of the existing membrane is estimated at 7 to 9 years."
+    },
+    {
+      "field": "roof_replacement_cost",
+      "value": 360000,
+      "value_range": null,
+      "unit": "USD",
+      "page": 3,
+      "quote": "Budgetary cost to replace the roof assembly is approximately $360,000."
+    },
+    {
+      "field": "removal_reinstall_cost",
+      "value": 85000,
+      "value_range": null,
+      "unit": "USD",
+      "page": 3,
+      "quote": "Allowance to remove and reinstall a rooftop array during membrane replacement is $85,000."
+    },
+    {
+      "field": "inspection_limitations",
+      "value": null,
+      "value_range": null,
+      "unit": "text",
+      "page": 3,
+      "quote": "the assessment was visual only; no core samples or moisture scans were performed"
+    },
+    {
+      "field": "who_pays_electricity",
+      "value": null,
+      "value_range": null,
+      "unit": "text",
+      "page": 3,
+      "quote": "Electricity for tenant spaces is billed directly to each tenant by the utility."
+    }
+  ]
+}
