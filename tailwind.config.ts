@@ -1,31 +1,36 @@
 import type { Config } from 'tailwindcss';
 
-// Palette and tokens derived from DESIGN.md (style reference only; no brand
-// names, logos or assets). Two surface worlds: a dark "night" frame and a
-// light "canvas" product surface, one saturated indigo action colour.
+// Light mint system: pale project-workspace surfaces, dark pine text/navigation,
+// and one contrast-safe green action color. Legacy token names remain aliases so
+// existing components inherit the new palette without carrying old lavender/indigo.
 const config: Config = {
   content: ['./app/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        primary: '#5266eb',
+        primary: '#16735b',
         'on-primary': '#ffffff',
-        periwinkle: '#9cb4e8',
-        canvas: '#fbfcfd',
+        'primary-soft': '#ddf3ea',
+        periwinkle: '#7bd4b5',
+        canvas: '#f7fcf9',
         surface: '#ffffff',
-        'surface-tint': '#fbfbff',
-        lavender: '#edecfb',
-        night: '#171721',
-        'night-raised': '#1e1e2a',
-        ink: '#28253b',
-        'ink-secondary': '#554e7b',
-        'on-dark': '#ededf3',
-        fog: '#c3c3cc',
-        slate: '#70707d',
-        // semantic (used sparingly, never as the only signal)
-        ok: '#2f8f5b',
-        warn: '#9a6a00',
-        danger: '#b4324a',
+        'surface-tint': '#f1faf6',
+        lavender: '#e7f7f0',
+        'mint-soft': '#e7f7f0',
+        'mint-wash': '#f1fbf6',
+        'mint-accent': '#7bd4b5',
+        'mint-border': '#b9e2d3',
+        night: '#0e3d32',
+        'night-raised': '#185246',
+        ink: '#14382f',
+        'ink-secondary': '#4c6d63',
+        'on-dark': '#f2fff9',
+        fog: '#bedbd2',
+        slate: '#66897f',
+        ok: '#16735b',
+        warn: '#8a6200',
+        danger: '#b33a50',
+        'danger-soft': '#fdecef',
       },
       borderRadius: {
         xs: '4px',
@@ -36,7 +41,6 @@ const config: Config = {
         pill: '40px',
       },
       fontFamily: {
-        // Inter is the open-source stand-in DESIGN.md recommends for arcadia.
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
       spacing: {

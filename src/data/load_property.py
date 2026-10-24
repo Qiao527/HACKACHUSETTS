@@ -53,8 +53,9 @@ def _doc_field(field: str, value: float, unit: str, page: int, quote: str) -> In
         field=field,
         value=value,
         unit=unit,
-        status="extracted_unconfirmed",
+        status="confirmed",
         evidence=Evidence(document_id=DEMO_DOCUMENT, page=page, evidence_text=quote, source_type="synthetic_document"),
+        confirmed_by_user=True,
     )
 
 
@@ -63,8 +64,9 @@ def _assumption_field(field: str, value: float, unit: str, note: str) -> InputFi
         field=field,
         value=value,
         unit=unit,
-        status="extracted_unconfirmed",
+        status="confirmed",
         evidence=Evidence(document_id="assumptions", page=1, evidence_text=note, source_type="assumption"),
+        confirmed_by_user=True,
     )
 
 

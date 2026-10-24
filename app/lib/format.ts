@@ -28,8 +28,8 @@ export function kwh(n: number): string {
 }
 
 // Produce a new EngineInput with one numeric InputField value overridden and
-// marked human_supplied (the UI's edit path). Keeps the original extraction on
-// the field so the evidence trail is preserved.
+// marked human_supplied (the UI's edit path). A changed value drops the old
+// citation so the brief never implies that a superseded quote supports it.
 export function withFieldValue(
   input: EngineInput,
   key: keyof EngineInput,
@@ -40,6 +40,7 @@ export function withFieldValue(
     ...current,
     value,
     status: 'human_supplied',
+    evidence: null,
     confirmed_by_user: true,
   };
   return { ...input, [key]: updated } as EngineInput;

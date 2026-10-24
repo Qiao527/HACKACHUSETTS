@@ -9,13 +9,17 @@ Change log (approved by contract owner):
   ISO 8601 dates, text, and "true"/"false". Numeric values stay in `value`.
 - Added EngineInput.escalation_rate (float >= 0, default 0.0): annual real
   escalation of electricity value.
+- Added SourceType "uploaded_document" so real user PDFs are never mislabeled
+  as synthetic documents.
 """
 from typing import Literal, Optional
 
 from pydantic import BaseModel, Field
 
 Status = Literal["extracted_unconfirmed", "confirmed", "missing", "conflicting", "human_supplied"]
-SourceType = Literal["synthetic_document", "public_record", "assumption", "api_fixture"]
+SourceType = Literal[
+    "synthetic_document", "uploaded_document", "public_record", "assumption", "api_fixture"
+]
 Schedule = Literal["solar_now_remove_later", "roof_and_solar_now", "roof_then_solar"]
 Language = Literal["en", "es", "zh"]
 

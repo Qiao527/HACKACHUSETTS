@@ -157,10 +157,9 @@ beforeEach(() => {
 });
 
 describe('decision-flow state consistency', () => {
-  it('preserves roof year and 30% tenant share when the page child changes', async () => {
+  it('starts empty, then preserves roof year and 30% user share when the page child changes', async () => {
     const initialInput = engineInput(4, 0.2);
     const changedInput = engineInput(9, 0.3);
-    api.getConstants.mockResolvedValue({ demo_input: initialInput });
     api.runEngine.mockResolvedValueOnce(engineResult(1)).mockResolvedValueOnce(engineResult(2));
 
     let scenario!: ReturnType<typeof useScenario>;
@@ -177,6 +176,13 @@ describe('decision-flow state consistency', () => {
           React.createElement(Probe, { page: 'timing' }),
         ),
       );
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+
+    expect(scenario.input).toBeNull();
+    await act(async () => {
+      scenario.setInput(initialInput);
       await Promise.resolve();
       await Promise.resolve();
     });
@@ -204,7 +210,6 @@ describe('decision-flow state consistency', () => {
 
   it('never accepts an older engine completion as the current result', async () => {
     const initialInput = engineInput(4, 0.2);
-    api.getConstants.mockResolvedValue({ demo_input: initialInput });
     api.runEngine.mockResolvedValueOnce(engineResult(1));
 
     let scenario!: ReturnType<typeof useScenario>;
@@ -215,6 +220,11 @@ describe('decision-flow state consistency', () => {
 
     await act(async () => {
       mounted = create(React.createElement(ScenarioProvider, null, React.createElement(Probe)));
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    await act(async () => {
+      scenario.setInput(initialInput);
       await Promise.resolve();
       await Promise.resolve();
     });
@@ -244,7 +254,6 @@ describe('decision-flow state consistency', () => {
 
   it('clears the current result and exposes only the current recalculation failure', async () => {
     const initialInput = engineInput(4, 0.2);
-    api.getConstants.mockResolvedValue({ demo_input: initialInput });
     api.runEngine.mockResolvedValueOnce(engineResult(1));
 
     let scenario!: ReturnType<typeof useScenario>;
@@ -255,6 +264,11 @@ describe('decision-flow state consistency', () => {
 
     await act(async () => {
       mounted = create(React.createElement(ScenarioProvider, null, React.createElement(Probe)));
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    await act(async () => {
+      scenario.setInput(initialInput);
       await Promise.resolve();
       await Promise.resolve();
     });
@@ -302,8 +316,9 @@ describe('decision-flow state consistency', () => {
 
     const updating = JSON.stringify(mounted!.toJSON());
     expect(updating).not.toContain('$968');
-    expect(updating).toContain('Updating current scenario…');
-    expect(updating.match(/Agreement not confirmed/g)).toHaveLength(2);
+    expect(updating).toContain('Updating current project…');
+    expect(updating).toContain('Implementation terms not confirmed');
+    expect(updating).toContain('Participation not confirmed');
   });
 
   it('never renders an allocation sweep from an older input revision', async () => {
@@ -335,7 +350,7 @@ describe('decision-flow state consistency', () => {
     });
 
     expect(JSON.stringify(mounted!.toJSON())).not.toContain('$111,111');
-    expect(JSON.stringify(mounted!.toJSON())).toContain('Updating current scenario');
+    expect(JSON.stringify(mounted!.toJSON())).toContain('Updating current project');
 
     await act(async () => {
       newer.resolve(sweepResult(222222));
@@ -358,7 +373,7 @@ describe('decision-flow state consistency', () => {
     });
 
     await act(async () => {
-      findButton(mounted!.root, 'Generate proposal').props.onClick();
+      findButton(mounted!.root, 'Generate explanation').props.onClick();
       await Promise.resolve();
     });
 
@@ -374,10 +389,10 @@ describe('decision-flow state consistency', () => {
     });
 
     expect(JSON.stringify(mounted!.toJSON())).not.toContain('obsolete proposal');
-    expect(JSON.stringify(mounted!.toJSON())).not.toContain('Draft — Not Mutually Accepted');
+    expect(JSON.stringify(mounted!.toJSON())).not.toContain('Draft — project-team review required');
 
     await act(async () => {
-      findButton(mounted!.root, 'Generate proposal').props.onClick();
+      findButton(mounted!.root, 'Generate explanation').props.onClick();
       await Promise.resolve();
     });
     await act(async () => {
@@ -386,6 +401,6 @@ describe('decision-flow state consistency', () => {
     });
 
     expect(JSON.stringify(mounted!.toJSON())).toContain('current proposal');
-    expect(JSON.stringify(mounted!.toJSON())).toContain('Draft — Not Mutually Accepted');
+    expect(JSON.stringify(mounted!.toJSON())).toContain('Draft — project-team review required');
   });
 });

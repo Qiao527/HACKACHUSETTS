@@ -9,30 +9,19 @@ export interface DecisionVerdict {
 }
 
 export function getDecisionVerdict(result: EngineResult | null): DecisionVerdict {
-  if (!result) {
-    return { message: 'Updating current scenario…', tone: 'updating' };
-  }
+  if (!result) return { message: 'Updating current project…', tone: 'updating' };
   if (!result.mutual_benefit_range) {
-    return { message: 'No Positive-Outcome Range exists.', tone: 'warning' };
+    return { message: 'No Positive-Outcome Range exists for the current inputs.', tone: 'warning' };
   }
-
   const schedule = result.results.find((item) => item.schedule === ANALYZED_SCHEDULE);
-  if (!schedule) {
-    return { message: 'Updating current scenario…', tone: 'updating' };
-  }
-  if (schedule.owner_npv < 0) {
-    return { message: 'Owner incremental NPV is negative.', tone: 'negative' };
-  }
-  if (schedule.tenant_first_full_year_savings === 0) {
-    return { message: 'Tenant first-year savings are zero.', tone: 'warning' };
-  }
+  if (!schedule) return { message: 'Updating current project…', tone: 'updating' };
+  if (schedule.owner_npv < 0) return { message: 'Project-side incremental NPV is negative.', tone: 'negative' };
+  if (schedule.tenant_first_full_year_savings === 0) return { message: 'Building-user first-year savings are zero.', tone: 'warning' };
   if (schedule.owner_npv > 0 && schedule.tenant_first_full_year_savings > 0) {
-    return { message: 'Both modeled financial outcomes are positive.', tone: 'positive' };
+    return { message: 'Both modeled project and building-user outcomes are positive.', tone: 'positive' };
   }
-  if (schedule.owner_npv === 0) {
-    return { message: 'Owner incremental NPV is zero.', tone: 'warning' };
-  }
-  return { message: 'Tenant first-year savings are negative.', tone: 'negative' };
+  if (schedule.owner_npv === 0) return { message: 'Project-side incremental NPV is zero.', tone: 'warning' };
+  return { message: 'Building-user first-year savings are negative.', tone: 'negative' };
 }
 
 export function formatContinuousPercent(fraction: number): string {
@@ -41,11 +30,8 @@ export function formatContinuousPercent(fraction: number): string {
   return `${percent.toFixed(digits)}%`;
 }
 
-export function wholePercentRange(
-  range: [number, number] | null,
-): [number, number] | null {
+export function wholePercentRange(range: [number, number] | null): [number, number] | null {
   if (!range) return null;
-
   const lowerPercent = range[0] * 100;
   const upperPercent = range[1] * 100;
   const first = lowerPercent <= 0 ? 0 : Math.ceil(lowerPercent);

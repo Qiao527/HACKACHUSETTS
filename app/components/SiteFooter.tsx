@@ -1,42 +1,33 @@
+import Link from 'next/link';
+
 export function SiteFooter() {
   return (
-    <footer className="bg-night px-4 py-10 text-fog sm:px-8 no-print">
+    <footer className="no-print bg-night px-4 py-10 text-fog sm:px-8">
       <div className="mx-auto max-w-content">
         <div className="grid gap-8 sm:grid-cols-3">
           <div>
-            <p className="text-on-dark" style={{ fontWeight: 480 }}>
-              SolarAlign
-            </p>
-            <p className="mt-2 text-sm leading-relaxed">
-              Why a financially promising rooftop solar project stalls on older
-              multi-tenant buildings — and whether an allocation benefits both
-              owner and tenants.
-            </p>
+            <p className="text-on-dark" style={{ fontWeight: 480 }}>SolarAlign</p>
+            <p className="mt-2 text-sm leading-relaxed">Evidence and decision support for moving more viable rooftop solar projects from interest to action.</p>
           </div>
           <div>
-            <p className="eyebrow text-on-dark">Data sources</p>
-            <ul className="mt-3 space-y-1 text-sm">
-              <li>NREL PVWatts V8</li>
-              <li>U.S. DOE PV cost benchmarks</li>
-              <li>Mass.gov SMART 3.0 · Boston BERDO</li>
+            <p className="eyebrow text-on-dark">Use the tools</p>
+            <ul className="mt-3 space-y-2 text-sm">
+              <li><Link href="/analyze" className="hover:text-on-dark">Analyze a project</Link></li>
+              <li><Link href="/field-form" className="hover:text-on-dark">Preview field worksheet</Link></li>
+              <li><a href="/solaralign-field-worksheet.pdf" download className="hover:text-on-dark">Download worksheet PDF</a></li>
             </ul>
           </div>
           <div>
-            <p className="eyebrow text-on-dark">Labels</p>
+            <p className="eyebrow text-on-dark">Boundaries</p>
             <ul className="mt-3 space-y-1 text-sm">
-              <li>Synthetic inputs are labeled in the app.</li>
-              <li>Not legal advice.</li>
-              <li>Eligibility not verified.</li>
-              <li>Incentives shown as “may change the result,” not calculated.</li>
+              <li>Estimates and assumptions stay labeled.</li>
+              <li>Not legal, structural, or tax advice.</li>
+              <li>Eligibility is not verified.</li>
+              <li>Incentives may change results but are not assumed.</li>
             </ul>
           </div>
         </div>
-        <p className="mt-8 border-t border-slate pt-4 text-xs leading-relaxed">
-          SolarAlign is a demonstration built at Hackachusetts 2026. The demo
-          building (Harbor Loom Warehouse), its roof report, tenancy and meter facts
-          are synthetic. Only the engine computes money;
-          the assistant copies engine numbers unchanged and never invents them.
-        </p>
+        <p className="mt-8 border-t border-slate pt-4 text-xs leading-relaxed">SolarAlign is a decision-support prototype built at Hackachusetts 2026. AI may locate source passages and draft explanations; deterministic Python code owns every financial calculation.</p>
       </div>
     </footer>
   );

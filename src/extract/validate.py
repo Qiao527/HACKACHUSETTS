@@ -122,6 +122,14 @@ def _numbers_grounded(field: InputField, quote: str) -> bool:
     return True
 
 
+def _text_grounded(field: InputField, quote: str) -> bool:
+    """Text candidates must be copied from the cited quote, not normalized or invented."""
+    if field.text_value is None:
+        return True
+    value = normalize(field.text_value)
+    return bool(value) and value in normalize(quote)
+
+
 def _roof_age_quote_ok(field: InputField, quote: str) -> bool:
     """A roof-age value needs a quote about the roof's own installation or age."""
     return bool(_ROOF_WORDS.search(quote) and _ROOF_DATE_WORDS[field.field].search(quote))
@@ -179,6 +187,16 @@ def validate_field(field: InputField, pages: list[str]) -> InputField:
                 field,
                 f"The number reported for {field.field} does not appear in the quoted passage "
                 f"on page {ev.page}. Provide a document stating it.",
+            ),
+        )
+
+    if not _text_grounded(field, ev.evidence_text):
+        return _mark_missing(
+            field,
+            _request(
+                field,
+                f"The text reported for {field.field} is not copied from the quoted passage "
+                f"on page {ev.page}.",
             ),
         )
 

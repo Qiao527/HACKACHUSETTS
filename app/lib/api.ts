@@ -4,6 +4,7 @@ import type {
   CoordinatorOutput,
   EngineInput,
   EngineResult,
+  InputField,
   Language,
 } from './contract';
 
@@ -86,13 +87,18 @@ export async function coordinate(
   return jsonOrThrow<CoordinatorOutput>(res);
 }
 
-export async function extract(file: File): Promise<{
+export interface ExtractResponse {
   document_id: string;
   page_count: number;
-  fields: EngineInput['roof_replacement_cost'][];
-}> {
+  pages: string[];
+  fields: InputField[];
+  structured: boolean;
+}
+
+export async function extract(file: File, structured = false): Promise<ExtractResponse> {
   const form = new FormData();
   form.append('file', file);
-  const res = await fetch('/api/extract', { method: 'POST', body: form });
-  return jsonOrThrow(res);
+  const params = new URLSearchParams({ structured: String(structured) });
+  const res = await fetch(`/api/extract?${params.toString()}`, { method: 'POST', body: form });
+  return jsonOrThrow<ExtractResponse>(res);
 }
