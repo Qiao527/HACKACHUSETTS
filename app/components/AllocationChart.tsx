@@ -13,8 +13,8 @@ import {
 } from 'recharts';
 import { runSweep, type SweepResponse } from '../lib/api';
 import type { EngineInput } from '../lib/contract';
-import { SCHEDULE_LABELS } from '../lib/contract';
-import { money, pct } from '../lib/format';
+import { formatContinuousPercent, wholePercentRange } from '../lib/decision-verdict';
+import { money } from '../lib/format';
 import { LatestRequest } from '../lib/latest-request';
 import { ANALYZED_SCHEDULE } from '../lib/scenario';
 
@@ -23,67 +23,128 @@ interface Props {
   inputRevision: number;
 }
 
-interface Datum {
+export interface AllocationDatum {
   share: number;
   owner: number;
   tenant: number;
 }
 
-function OutcomeChart({
+export function formatCurrencyTick(value: number): string {
+  const absoluteValue = Math.abs(value);
+  const magnitude = absoluteValue >= 1000
+    ? `${Math.round(absoluteValue / 1000)}k`
+    : Math.round(absoluteValue).toLocaleString('en-US');
+  return `${value < 0 ? '-' : ''}$${magnitude}`;
+}
+
+export function AllocationOutcomeChart({
   data,
   dataKey,
   label,
   color,
   zone,
   currentShare,
+  fixedWidth,
 }: {
-  data: Datum[];
+  data: AllocationDatum[];
   dataKey: 'owner' | 'tenant';
   label: string;
   color: string;
   zone: [number, number] | null;
   currentShare: number;
+  fixedWidth?: number;
 }) {
+  const chart = (
+    <LineChart
+      width={fixedWidth}
+      height={230}
+      data={data}
+      margin={{ top: 12, right: 24, bottom: 24, left: 8 }}
+    >
+      <CartesianGrid stroke="#ededf3" />
+      <XAxis
+        type="number"
+        dataKey="share"
+        domain={[0, 100]}
+        ticks={[0, 25, 50, 75, 100]}
+        tickFormatter={(value) => `${value}%`}
+        label={{
+          value: 'Tenant share of allocatable value',
+          position: 'bottom',
+          offset: 0,
+          fill: '#554e7b',
+        }}
+        stroke="#70707d"
+      />
+      <YAxis tickFormatter={formatCurrencyTick} stroke="#70707d" width={56} />
+      <Tooltip
+        formatter={(value: number) => [money(value), label]}
+        labelFormatter={(value) => `Tenant share ${value}%`}
+        contentStyle={{ borderRadius: 8, border: '1px solid #ededf3' }}
+      />
+      <ReferenceLine y={0} stroke="#70707d" strokeDasharray="2 2" />
+      {zone && (
+        <ReferenceArea
+          x1={zone[0] * 100}
+          x2={zone[1] * 100}
+          fill="#5266eb"
+          fillOpacity={0.12}
+        />
+      )}
+      <ReferenceLine
+        x={currentShare}
+        stroke="#9cb4e8"
+        label={{ value: 'current', position: 'top', fill: '#554e7b', fontSize: 11 }}
+      />
+      <Line
+        type="monotone"
+        dataKey={dataKey}
+        name={label}
+        stroke={color}
+        strokeWidth={2}
+        dot={false}
+      />
+    </LineChart>
+  );
+
   return (
     <div>
       <h4 className="mb-2 text-sm text-ink">{label}</h4>
-      <ResponsiveContainer width="100%" height={230}>
-        <LineChart data={data} margin={{ top: 12, right: 24, bottom: 24, left: 8 }}>
-          <CartesianGrid stroke="#ededf3" />
-          <XAxis
-            dataKey="share"
-            tickFormatter={(value) => `${value}%`}
-            label={{
-              value: 'Tenant share of allocatable value',
-              position: 'bottom',
-              offset: 0,
-              fill: '#554e7b',
-            }}
-            stroke="#70707d"
-          />
-          <YAxis tickFormatter={(value) => `$${Math.round(value / 1000)}k`} stroke="#70707d" width={56} />
-          <Tooltip
-            formatter={(value: number) => [money(value), label]}
-            labelFormatter={(value) => `Tenant share ${value}%`}
-            contentStyle={{ borderRadius: 8, border: '1px solid #ededf3' }}
-          />
-          <ReferenceLine y={0} stroke="#70707d" strokeDasharray="2 2" />
-          {zone && (
-            <ReferenceArea
-              x1={Math.round(zone[0] * 100)}
-              x2={Math.round(zone[1] * 100)}
-              fill="#5266eb"
-              fillOpacity={0.12}
-            />
-          )}
-          <ReferenceLine
-            x={currentShare}
-            stroke="#9cb4e8"
-            label={{ value: 'current', position: 'top', fill: '#554e7b', fontSize: 11 }}
-          />
-          <Line type="monotone" dataKey={dataKey} name={label} stroke={color} strokeWidth={2} dot={false} />
-        </LineChart>
-      </ResponsiveContainer>
+      {fixedWidth ? chart : (
+        <ResponsiveContainer width="100%" height={230}>
+          {chart}
+        </ResponsiveContainer>
+      )}
+    </div>
+  );
+}
+
+function AllocationChartPlaceholder({
+  message,
+  horizonYears,
+  error = false,
+}: {
+  message: string;
+  horizonYears: number;
+  error?: boolean;
+}) {
+  const labels = [
+    `Owner incremental NPV (${horizonYears}-year horizon)`,
+    'Tenant savings (first full operating year)',
+  ];
+  return (
+    <div className="space-y-5 rounded-md bg-surface p-4" style={{ border: '1px solid #ededf3' }}>
+      {labels.map((label) => (
+        <div key={label}>
+          <h4 className="mb-2 text-sm text-ink">{label}</h4>
+          <div
+            className={`flex h-[230px] items-center justify-center rounded-sm bg-surface-tint px-4 text-center text-sm ${error ? 'text-danger' : 'text-ink-secondary'}`}
+            role="status"
+          >
+            {message}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
@@ -119,29 +180,38 @@ export function AllocationChart({ input, inputRevision }: Props) {
   }, [input, inputRevision]);
 
   const currentError = error?.revision === inputRevision ? error.message : null;
-  if (currentError) return <p className="text-danger">Could not load allocation: {currentError}</p>;
+  if (currentError) {
+    return (
+      <AllocationChartPlaceholder
+        message={`Could not load allocation: ${currentError}`}
+        horizonYears={input.horizon_years}
+        error
+      />
+    );
+  }
   const currentSweep = sweep?.revision === inputRevision ? sweep.value : null;
   if (!currentSweep) {
-    return <p className="text-ink-secondary" role="status">Loading current allocation…</p>;
+    return (
+      <AllocationChartPlaceholder
+        message="Updating current scenario…"
+        horizonYears={input.horizon_years}
+      />
+    );
   }
 
   const data = currentSweep.points.map((point) => ({
-    share: Math.round(point.tenant_share * 100),
+    share: point.tenant_share * 100,
     owner: Math.round(point.owner_npv),
     tenant: Math.round(point.tenant_first_full_year_savings),
   }));
   const zone = currentSweep.mutual_benefit_range;
   const currentShare = Math.round(input.tenant_share * 100);
+  const sliderRange = wholePercentRange(zone);
 
   return (
     <div>
-      <p className="mb-3 text-sm text-ink-secondary">
-        <span className="eyebrow text-ink-secondary">Analyzed roof schedule</span>
-        <br />
-        <span className="text-ink">{SCHEDULE_LABELS[ANALYZED_SCHEDULE]}</span>
-      </p>
       <div className="space-y-5 rounded-md bg-surface p-4" style={{ border: '1px solid #ededf3' }}>
-        <OutcomeChart
+        <AllocationOutcomeChart
           data={data}
           dataKey="owner"
           label={`Owner incremental NPV (${input.horizon_years}-year horizon)`}
@@ -149,7 +219,7 @@ export function AllocationChart({ input, inputRevision }: Props) {
           zone={zone}
           currentShare={currentShare}
         />
-        <OutcomeChart
+        <AllocationOutcomeChart
           data={data}
           dataKey="tenant"
           label="Tenant savings (first full operating year)"
@@ -161,11 +231,14 @@ export function AllocationChart({ input, inputRevision }: Props) {
 
       {zone ? (
         <p className="mt-3 text-sm text-ink-secondary">
-          Positive-Outcome Range: tenant share between{' '}
-          <strong className="text-ink">{pct(zone[0])}</strong> and{' '}
-          <strong className="text-ink">{pct(zone[1])}</strong>. For the analyzed schedule,
-          owner incremental NPV and tenant first-full-year savings are each greater than zero.
-          This range does not establish owner–tenant agreement.
+          Positive-Outcome Range: continuous engine bounds{' '}
+          <strong className="text-ink">{formatContinuousPercent(zone[0])}</strong>–
+          <strong className="text-ink">{formatContinuousPercent(zone[1])}</strong>.
+          Whole-percentage slider positions: <strong className="text-ink">
+            {sliderRange ? `${sliderRange[0]}%–${sliderRange[1]}%` : 'none'}
+          </strong>. For the analyzed schedule, owner incremental NPV and tenant
+          first-full-year savings are each greater than zero. This range does not establish
+          owner–tenant agreement.
         </p>
       ) : (
         <p className="mt-3 rounded-sm bg-[#9a6a000f] px-3 py-2 text-sm text-warn">

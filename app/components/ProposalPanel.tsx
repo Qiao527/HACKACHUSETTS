@@ -2,10 +2,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { coordinate } from '../lib/api';
 import type { CoordinatorOutput, EngineResult, Language } from '../lib/contract';
-import { SCHEDULE_LABELS } from '../lib/contract';
 import { pct } from '../lib/format';
 import { LatestRequest } from '../lib/latest-request';
-import { ANALYZED_SCHEDULE } from '../lib/scenario';
 import { LegalLabels } from './Badges';
 
 interface Props {
@@ -89,10 +87,6 @@ export function ProposalPanel({ result, inputRevision }: Props) {
         <div>
           <p className="eyebrow text-ink-secondary">AI coordinator</p>
           <h3 className="h2 mt-1">{t('Proposed allocation', 'Asignación propuesta')}</h3>
-          <p className="mt-2 text-sm text-ink-secondary">
-            {t('Analyzed roof schedule:', 'Programa de techo analizado:')}{' '}
-            <span className="text-ink">{SCHEDULE_LABELS[ANALYZED_SCHEDULE]}</span>
-          </p>
         </div>
         <div className="flex items-center gap-2 no-print" role="group" aria-label="Language">
           <button

@@ -9,6 +9,7 @@ import type {
   InputField,
 } from '../lib/contract';
 import { AllocationChart } from './AllocationChart';
+import { AllocationToggle } from './AllocationToggle';
 import { ProposalPanel } from './ProposalPanel';
 import { ScenarioProvider, useScenario } from './ScenarioProvider';
 
@@ -275,6 +276,36 @@ describe('decision-flow state consistency', () => {
     expect(scenario.recalculating).toBe(false);
   });
 
+  it('replaces current allocation values with stable updating placeholders', () => {
+    const input = engineInput(4, 0.19);
+    act(() => {
+      mounted = create(
+        React.createElement(AllocationToggle, {
+          input,
+          result: engineResult(968),
+          onChange: vi.fn(),
+        }),
+      );
+    });
+
+    expect(JSON.stringify(mounted!.toJSON())).toContain('$968');
+
+    act(() => {
+      mounted?.update(
+        React.createElement(AllocationToggle, {
+          input,
+          result: null,
+          onChange: vi.fn(),
+        }),
+      );
+    });
+
+    const updating = JSON.stringify(mounted!.toJSON());
+    expect(updating).not.toContain('$968');
+    expect(updating).toContain('Updating current scenario…');
+    expect(updating.match(/Agreement not confirmed/g)).toHaveLength(2);
+  });
+
   it('never renders an allocation sweep from an older input revision', async () => {
     const older = deferred<ReturnType<typeof sweepResult>>();
     const newer = deferred<ReturnType<typeof sweepResult>>();
@@ -304,7 +335,7 @@ describe('decision-flow state consistency', () => {
     });
 
     expect(JSON.stringify(mounted!.toJSON())).not.toContain('$111,111');
-    expect(JSON.stringify(mounted!.toJSON())).toContain('Loading current allocation');
+    expect(JSON.stringify(mounted!.toJSON())).toContain('Updating current scenario');
 
     await act(async () => {
       newer.resolve(sweepResult(222222));
