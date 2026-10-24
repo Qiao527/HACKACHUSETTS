@@ -1,0 +1,100 @@
+{
+  "_meta": {
+    "description": "Single source of truth for policy numbers used by SolarAlign. Every entry must have value, unit, source_url, source_title, retrieved. Checked by scripts/check_sources.py via the policy-source-guard hook.",
+    "last_reviewed": "2026-10-24"
+  },
+  "smart_3_0": {
+    "flat_incentive_rate_le_25kw_2026": {
+      "value": 0.03,
+      "unit": "USD/kWh",
+      "source_url": "https://www.mass.gov/info-details/smart-30-program-details",
+      "source_title": "Mass.gov — SMART 3.0 Program Details, Program Year 2026 Flat Incentive Rates",
+      "retrieved": "2026-10-24",
+      "notes": "All-inclusive for systems <= 25 kW AC; not eligible for adders. Rate is locked for 20 years once qualified."
+    },
+    "base_compensation_25_250kw_2026": {
+      "value": 0.2807,
+      "unit": "USD/kWh",
+      "source_url": "https://www.mass.gov/info-details/smart-30-program-details",
+      "source_title": "Mass.gov — SMART 3.0 Program Details, Program Year 2026 Base Compensation Rates",
+      "retrieved": "2026-10-24",
+      "notes": "For > 25 and <= 250 kW AC. Behind-the-meter incentive = (base + adders - value_of_energy) x kWh. Not an extra cash payment on top of bill savings."
+    },
+    "base_compensation_250_500kw_2026": {
+      "value": 0.2430,
+      "unit": "USD/kWh",
+      "source_url": "https://www.mass.gov/info-details/smart-30-program-details",
+      "source_title": "Mass.gov — SMART 3.0 Program Details, Program Year 2026 Base Compensation Rates",
+      "retrieved": "2026-10-24",
+      "notes": "For > 250 and <= 500 kW AC. Rates above 500 kW not yet added: add from the same page before using."
+    },
+    "compensation_term_years": {
+      "value": 20,
+      "unit": "years",
+      "source_url": "https://www.mass.gov/doc/smart-30-overview/download",
+      "source_title": "Mass.gov — SMART 3.0 Overview",
+      "retrieved": "2026-10-24",
+      "notes": "All SMART 3.0 projects have a 20-year compensation term."
+    },
+    "value_of_energy": {
+      "value": null,
+      "unit": "USD/kWh",
+      "source_url": "https://www.mass.gov/info-details/smart-30-program-details",
+      "source_title": "Mass.gov — SMART 3.0 Program Year 2026 BTM Value of Energy Workbook",
+      "retrieved": "2026-10-24",
+      "notes": "TODO: derive from DOER's BTM Value of Energy and Incentive Calculator for the utility and rate class of the demo building. Until then, treat as a labeled assumption in the UI."
+    }
+  },
+  "federal_48e": {
+    "begin_construction_deadline": {
+      "value": "2026-07-04",
+      "unit": "date",
+      "source_url": "https://www.solarinsure.com/commercial-solar-tax-credit-deadline-passed",
+      "source_title": "Solar Insure — Commercial solar tax credit deadline passed (summarizes OBBBA / Notice 2025-42)",
+      "retrieved": "2026-10-24",
+      "notes": "Projects beginning construction after this date must be placed in service by the date below. Replace with an irs.gov citation when available."
+    },
+    "placed_in_service_deadline_if_late_start": {
+      "value": "2027-12-31",
+      "unit": "date",
+      "source_url": "https://www.solarinsure.com/commercial-solar-tax-credit-deadline-passed",
+      "source_title": "Solar Insure — Commercial solar tax credit deadline passed",
+      "retrieved": "2026-10-24",
+      "notes": "Eligibility also depends on other conditions (e.g., foreign entity rules). Output a status, never a guaranteed credit."
+    }
+  },
+  "boston_berdo": {
+    "acp_rate": {
+      "value": 234,
+      "unit": "USD/tCO2e",
+      "source_url": "https://www.boston.gov/sites/default/files/berdo/BERDO_EmissionsCompliance.pdf",
+      "source_title": "City of Boston — How to Comply with Your BERDO Emissions Standard",
+      "retrieved": "2026-10-24",
+      "notes": "Alternative Compliance Payment per metric ton CO2e above the building's limit. Reviewed by the BERDO Review Board at least every five years."
+    },
+    "penalty_emissions_large": {
+      "value": 1000,
+      "unit": "USD/day",
+      "source_url": "https://envigilance.com/energy-monitoring/berdo/",
+      "source_title": "Envigilance — BERDO 2.0 compliance overview",
+      "retrieved": "2026-10-24",
+      "notes": "Failure to meet emissions standards, buildings over 35,000 sq ft. Context only: model cost with ACP, not penalties. Replace with boston.gov citation when available."
+    },
+    "penalty_emissions_small": {
+      "value": 300,
+      "unit": "USD/day",
+      "source_url": "https://envigilance.com/energy-monitoring/berdo/",
+      "source_title": "Envigilance — BERDO 2.0 compliance overview",
+      "retrieved": "2026-10-24",
+      "notes": "Failure to meet emissions standards, smaller covered buildings. Context only."
+    },
+    "mid_size_nonres_compliance_start": {
+      "value": 2030,
+      "unit": "year",
+      "source_url": "https://envigilance.com/energy-monitoring/berdo/",
+      "source_title": "Envigilance — BERDO 2.0 thresholds and compliance dates",
+      "retrieved": "2026-10-24",
+      "notes": "Non-residential buildings 20,000–35,000 sq ft begin emissions compliance in 2030. Larger buildings began in 2025."
+    }
+  }
+}

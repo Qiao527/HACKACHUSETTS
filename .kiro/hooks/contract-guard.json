@@ -1,0 +1,13 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Contract changes need the whole suite",
+      "description": "When the agent edits src/contract.py, run the full test suite so every module sees the change immediately.",
+      "trigger": "PostFileSave",
+      "matcher": "src/contract\\.py$",
+      "action": { "type": "command", "command": "python -m pytest -q" },
+      "timeout": 180
+    }
+  ]
+}

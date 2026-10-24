@@ -1,0 +1,12 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Run Python tests after each spec task",
+      "description": "Runs pytest, including Hypothesis property tests, every time a spec task finishes. Command action: no agent credits. Failures go back to the agent.",
+      "trigger": "PostTaskExecution",
+      "action": { "type": "command", "command": "python -m pytest -q --hypothesis-show-statistics" },
+      "timeout": 180
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "New core module needs a property test",
+      "description": "Agent action: when a new module is created in src/engine, src/extract or src/coordinator, ask Kiro to create its property-test file.",
+      "trigger": "FileCreate",
+      "matcher": "src/(engine|extract|coordinator)/[^/]+\\.py$",
+      "action": {
+        "type": "agent",
+        "prompt": "A new module was just created in src/engine, src/extract or src/coordinator. If it has non-trivial logic, create or extend tests/test_<module>_properties.py with Hypothesis property tests for every EARS requirement it implements. Follow financial-rules.md or ai-rules.md. Put the requirement ID in a comment above each test. Never call a real LLM or live API in tests; use fixtures in data/fixtures/."
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Block ignoring the .kiro folder",
+      "description": "Hackathon rules: the /.kiro directory must stay in the repo. This blocks any agent write that would add .kiro to .gitignore.",
+      "trigger": "PreToolUse",
+      "matcher": "write",
+      "action": {
+        "type": "command",
+        "command": "python scripts/guard_gitignore.py"
+      },
+      "timeout": 15
+    }
+  ]
+}

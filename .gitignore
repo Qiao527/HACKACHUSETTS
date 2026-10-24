@@ -1,0 +1,21 @@
+# Node / Next.js
+node_modules/
+.next/
+out/
+.vercel/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.hypothesis/
+
+# Secrets
+.env
+.env.local
+
+# OS
+.DS_Store
+
+# NEVER add .kiro/ here: hackathon rules require it to be committed.

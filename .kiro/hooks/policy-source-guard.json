@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Policy constants must cite sources",
+      "description": "When the agent edits data/policy_constants.json, verify every entry has value, unit, source_url, source_title and retrieved date.",
+      "trigger": "PostFileSave",
+      "matcher": "data/policy_constants\\.json$",
+      "action": {
+        "type": "command",
+        "command": "python scripts/check_sources.py"
+      },
+      "timeout": 30
+    }
+  ]
+}
