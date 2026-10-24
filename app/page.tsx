@@ -20,18 +20,17 @@ export default function HomePage() {
             <Link href="/evidence" className="pill pill-primary">
               Launch demo with Harbor Loom Warehouse
             </Link>
-            <Link href="/timing" className="pill pill-glass">
+            <Link href="/value" className="pill pill-glass">
               Jump to the allocation
             </Link>
           </div>
           <div className="mt-10 grid max-w-3xl gap-6 sm:grid-cols-3">
             <Stat value="3" caption="roof/solar schedules vs. one baseline" />
-            <Stat value="2" caption="metrics: owner NPV, tenant first-year savings" />
-            <Stat value="1" caption="mutual-benefit zone (or an honest none)" />
+            <Stat value="2" caption="metrics: owner NPV, tenant savings in first full operating year" />
+            <Stat value="1" caption="Positive-Outcome Range (or an honest none)" />
           </div>
         </div>
       </section>
-
       {/* Light product section: the four steps. */}
       <section className="px-4 py-section sm:px-8">
         <div className="mx-auto max-w-content">
@@ -56,7 +55,7 @@ export default function HomePage() {
               n="C"
               href="/value"
               title="Split the value"
-              body="Move one slider between owner and tenants. Owner NPV and tenant savings trade off; the mutual-benefit zone lights up, or honestly does not exist."
+              body="Move one slider between owner and tenants. The Positive-Outcome Range marks shares where owner NPV and tenant savings in the first full operating year are each above zero; it does not establish agreement."
             />
             <Step
               n="D"

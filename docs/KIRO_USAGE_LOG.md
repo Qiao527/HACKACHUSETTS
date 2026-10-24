@@ -12,6 +12,13 @@
 | | | CLI | CLI | | | |
 | | | Vibe mode (comparison) | IDE | | | |
 
+| 16:03 | Kiro | Context gatherer | IDE | Traced the provider, engine sweep, proposal, navigation, and brief flows in the isolated worktree before editing. | The implementation stayed inside the frontend ownership boundary and left extraction, API, contracts, and engine files untouched. | |
+| 16:11 | Kiro | Test failure | CLI | New React component tests failed because Vitest compiled TSX with the classic JSX runtime (`React is not defined`). Added the automatic JSX transform to `vitest.config.ts` before rerunning. | The failure exposed a test-runner mismatch without changing production behavior. | |
+| 16:12 | Kiro | Typecheck failure | CLI | Strict TypeScript flagged four nullable test-renderer references. Changed only those assertions to use the renderer’s established non-null invariant. | Test code now passes the same strict checks as production code. | |
+| 16:12 | Kiro | Vibe mode implementation | IDE | Moved one ScenarioProvider to the root layout; added input revisions and latest-request guards; blocked stale financial, sweep, proposal, and brief output; converted owned CTAs to Link and kept the external-owned Evidence CTA on client-side navigation through DemoShell. | Roof year and tenant share now remain in one provider across workflow route changes, and financial output is tied to the current input rather than scenario_id. | |
+| 16:12 | Kiro | Acceptance tests | CLI | Added component tests that exercise the root-layout provider, retain roof year and a 30% tenant share across child-route replacement, reject out-of-order and failed engine completions, hide obsolete allocation sweeps, clear an obsolete proposal after an input revision, and require the draft label on the current proposal. | The requested state-consistency behavior has repeatable regression coverage. | |
+| 16:24 | Kiro | Final validation | CLI | `npm run typecheck`, `npm run test` (3 files, 13 tests), `npm run build`, and `git diff --check` passed. | The focused branch typechecks, passes frontend tests, and produces all six application routes in a production build. | |
+| 16:23 | Kiro | Test failure | CLI | The root-layout persistence test reached Next.js Link’s browser-only idle callback in the Node test renderer (`self is not defined`). Replaced Link with a semantic anchor only inside the test module. | The test can exercise the real root provider composition without requiring a browser or changing production navigation. | |
 **Spec vs. vibe comparison**
 
 | Measure | Engine (spec mode) | UI styling (vibe mode) |

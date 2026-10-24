@@ -1,13 +1,13 @@
 'use client';
-
+import Link from 'next/link';
 import { DemoShell, ScenarioGate } from '../components/DemoShell';
 import { RoofControls } from '../components/RoofControls';
 import { ScheduleChart } from '../components/ScheduleChart';
 import { useScenario } from '../components/ScenarioProvider';
 
 function TimingBody() {
-  const { input, result, setInput } = useScenario();
-  if (!input || !result) return null;
+  const { input, result, recalculating, setInput } = useScenario();
+  if (!input) return null;
 
   return (
     <div className="grid gap-8 lg:grid-cols-[320px_1fr]">
@@ -24,11 +24,17 @@ function TimingBody() {
       </div>
       <div>
         <h2 className="h2 mb-3">Three plans vs. one roof-only baseline</h2>
-        <ScheduleChart result={result} />
+        {result ? (
+          <ScheduleChart result={result} />
+        ) : (
+          <p className="rounded-md bg-lavender p-5 text-sm text-ink-secondary" role="status">
+            {recalculating ? 'Recalculating timing results for this roof year…' : 'Timing results are unavailable.'}
+          </p>
+        )}
         <div className="mt-6 no-print">
-          <a href="/value" className="pill pill-primary">
+          <Link href="/value" className="pill pill-primary">
             Next: split the value →
-          </a>
+          </Link>
         </div>
       </div>
     </div>
