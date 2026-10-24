@@ -1,0 +1,158 @@
+[
+  {
+    "field": "report_date",
+    "value": "2026-10-24",
+    "value_range": null,
+    "unit": "date",
+    "expected_value": "2026-10-24",
+    "status": "extracted_unconfirmed",
+    "confirmed_by_user": false,
+    "evidence": {
+      "document_id": "demo_pca.pdf",
+      "page": 1,
+      "evidence_text": "Report date: October 24, 2026.",
+      "source_type": "synthetic_document"
+    },
+    "request": null
+  },
+  {
+    "field": "building_construction_year",
+    "value": 1979,
+    "value_range": null,
+    "unit": "year",
+    "expected_value": 1979,
+    "status": "extracted_unconfirmed",
+    "confirmed_by_user": false,
+    "evidence": {
+      "document_id": "demo_pca.pdf",
+      "page": 1,
+      "evidence_text": "The building was constructed in 1979.",
+      "source_type": "synthetic_document"
+    },
+    "request": null
+  },
+  {
+    "field": "building_type",
+    "value": "low-rise multi-tenant warehouse",
+    "value_range": null,
+    "unit": "text",
+    "expected_value": "low-rise multi-tenant warehouse",
+    "status": "extracted_unconfirmed",
+    "confirmed_by_user": false,
+    "evidence": {
+      "document_id": "demo_pca.pdf",
+      "page": 1,
+      "evidence_text": "A fictional low-rise, multi-tenant warehouse in East Boston.",
+      "source_type": "synthetic_document"
+    },
+    "request": null
+  },
+  {
+    "field": "roof_type",
+    "value": "low-slope modified-bitumen membrane",
+    "value_range": null,
+    "unit": "text",
+    "expected_value": "low-slope modified-bitumen membrane",
+    "status": "extracted_unconfirmed",
+    "confirmed_by_user": false,
+    "evidence": {
+      "document_id": "demo_pca.pdf",
+      "page": 2,
+      "evidence_text": "Roof type: low-slope modified-bitumen membrane.",
+      "source_type": "synthetic_document"
+    },
+    "request": null
+  },
+  {
+    "field": "roof_remaining_life_years",
+    "value": null,
+    "value_range": [
+      2,
+      4
+    ],
+    "unit": "years",
+    "expected_value": [
+      2,
+      4
+    ],
+    "status": "extracted_unconfirmed",
+    "confirmed_by_user": false,
+    "evidence": {
+      "document_id": "demo_pca.pdf",
+      "page": 2,
+      "evidence_text": "Remaining useful life is estimated at 2 to 4 years.",
+      "source_type": "synthetic_document"
+    },
+    "request": null
+  },
+  {
+    "field": "roof_replacement_cost",
+    "value": 300000,
+    "value_range": null,
+    "unit": "USD (2024 real)",
+    "expected_value": 300000,
+    "status": "extracted_unconfirmed",
+    "confirmed_by_user": false,
+    "evidence": {
+      "document_id": "demo_pca.pdf",
+      "page": 2,
+      "evidence_text": "Estimated roof replacement cost: $300,000 (2024 dollars).",
+      "source_type": "synthetic_document"
+    },
+    "request": null
+  },
+  {
+    "field": "structural_capacity_assessed",
+    "value": false,
+    "value_range": null,
+    "unit": "boolean",
+    "expected_value": false,
+    "status": "extracted_unconfirmed",
+    "confirmed_by_user": false,
+    "evidence": {
+      "document_id": "demo_pca.pdf",
+      "page": 3,
+      "evidence_text": "Structural capacity for rooftop equipment was not assessed.",
+      "source_type": "synthetic_document"
+    },
+    "request": null
+  },
+  {
+    "field": "tenant_electricity_arrangement",
+    "value": "separately metered; tenants pay",
+    "value_range": null,
+    "unit": "text",
+    "expected_value": "separately metered; tenants pay",
+    "status": "extracted_unconfirmed",
+    "confirmed_by_user": false,
+    "evidence": {
+      "document_id": "demo_pca.pdf",
+      "page": 3,
+      "evidence_text": "Tenants are separately metered and pay their electricity bills.",
+      "source_type": "synthetic_document"
+    },
+    "request": null
+  },
+  {
+    "field": "roof_installation_year",
+    "value": null,
+    "value_range": null,
+    "unit": "year",
+    "expected_value": "missing",
+    "status": "missing",
+    "confirmed_by_user": false,
+    "evidence": null,
+    "request": "Obtain roofing records; never infer from building construction."
+  },
+  {
+    "field": "roof_age_years",
+    "value": null,
+    "value_range": null,
+    "unit": "years",
+    "expected_value": "missing",
+    "status": "missing",
+    "confirmed_by_user": false,
+    "evidence": null,
+    "request": "Obtain roofing records; never infer from building construction."
+  }
+]
