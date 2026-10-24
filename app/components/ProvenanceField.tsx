@@ -32,7 +32,7 @@ export function ProvenanceField({
     .replace(/\b\w/g, (c) => c.toUpperCase());
 
   return (
-    <div className="rounded-md bg-surface p-4" style={{ border: '1px solid #ededf3' }}>
+    <div className="rounded-xl border border-mint-border bg-surface p-4">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
           <p className="eyebrow text-ink-secondary">{label}</p>
@@ -60,8 +60,7 @@ export function ProvenanceField({
           </button>
           {open && (
             <blockquote
-              className="mt-2 rounded-sm bg-lavender px-3 py-2 text-sm italic text-ink"
-              style={{ borderLeft: '3px solid #5266eb' }}
+              className="mt-2 rounded-lg border-l-2 border-primary bg-mint-soft px-3 py-2 text-sm italic text-ink"
             >
               “{field.evidence.evidence_text}”
               <footer className="mt-1 not-italic text-xs text-ink-secondary">
@@ -87,8 +86,7 @@ export function ProvenanceField({
                 type="number"
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
-                className="h-9 w-40 rounded-sm px-2 text-ink"
-                style={{ border: '1px solid #c3c3cc' }}
+                className="h-9 w-40 rounded-lg border border-mint-border px-2 text-ink"
                 aria-label={`Edit ${label}`}
               />
               <button

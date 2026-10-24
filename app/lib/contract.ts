@@ -10,6 +10,7 @@ export type Status =
 
 export type SourceType =
   | 'synthetic_document'
+  | 'uploaded_document'
   | 'public_record'
   | 'assumption'
   | 'api_fixture';

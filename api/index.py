@@ -12,6 +12,7 @@ Deployed as a Vercel Python function; `uvicorn api.index:app` runs it locally.
 from __future__ import annotations
 
 import json
+import math
 import sys
 from pathlib import Path
 from typing import Optional
@@ -25,11 +26,17 @@ from fastapi import Body, FastAPI, HTTPException, UploadFile  # noqa: E402
 from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
 from pydantic import BaseModel  # noqa: E402
 
-from src.contract import CoordinatorOutput, EngineInput, EngineResult, Language  # noqa: E402
+from src.contract import (  # noqa: E402
+    CoordinatorOutput,
+    EngineInput,
+    EngineResult,
+    InputField,
+    Language,
+)
 from src.coordinator import CoordinatorRejected, coordinate  # noqa: E402
 from src.data import build_demo_engine_input  # noqa: E402
 from src.engine import run_engine  # noqa: E402
-from src.extract import extract_fields  # noqa: E402
+from src.extract import PdfLimitExceeded, extract_fields, read_pdf_pages_isolated  # noqa: E402
 
 app = FastAPI(title="SolarAlign API", version="1.0.0")
 
@@ -41,6 +48,43 @@ app.add_middleware(
 )
 
 _POLICY = _ROOT / "data" / "policy_constants.json"
+_MAX_PDF_BYTES = 10 * 1024 * 1024
+_MAX_PDF_PAGES = 60
+_MAX_EXTRACTED_CHARACTERS = 180_000
+_REQUIRED_NUMERIC_FIELDS = (
+    "roof_replacement_year",
+    "roof_replacement_cost",
+    "removal_reinstall_cost",
+    "annual_kwh",
+    "solar_capex",
+    "om_cost_per_year",
+    "electricity_value_per_kwh",
+)
+
+
+def _validate_engine_input(payload: EngineInput) -> None:
+    """Reject substantively blank or invalid nested values before running math."""
+    missing: list[str] = []
+    invalid: list[str] = []
+    unaccepted: list[str] = []
+    for name in _REQUIRED_NUMERIC_FIELDS:
+        field = getattr(payload, name)
+        value = field.value
+        if value is None:
+            missing.append(name)
+        elif not math.isfinite(value) or value < 0:
+            invalid.append(name)
+        if field.status not in ("confirmed", "human_supplied") or not field.confirmed_by_user:
+            unaccepted.append(name)
+    if missing or invalid or unaccepted:
+        parts: list[str] = []
+        if missing:
+            parts.append("missing values: " + ", ".join(missing))
+        if invalid:
+            parts.append("values must be finite and nonnegative: " + ", ".join(invalid))
+        if unaccepted:
+            parts.append("review or confirm these values before calculation: " + ", ".join(unaccepted))
+        raise HTTPException(status_code=422, detail="; ".join(parts))
 
 
 @app.get("/api/constants")
@@ -58,7 +102,8 @@ def get_constants(tenant_share: float = 0.1, roof_replacement_year: float = 3.0)
 
 @app.post("/api/engine", response_model=EngineResult)
 def post_engine(payload: EngineInput = Body(...)) -> EngineResult:
-    """Run the deterministic engine. No LLM. Fast enough to re-call on every slider move."""
+    """Run the deterministic engine after checking every required numeric input."""
+    _validate_engine_input(payload)
     return run_engine(payload)
 
 
@@ -87,6 +132,7 @@ def post_sweep(
     the engine's job, never the browser's (ui-rules.md). One run per step.
     """
     steps = max(2, min(steps, 201))
+    _validate_engine_input(payload)
     points: list[SweepPoint] = []
     for i in range(steps):
         share = i / (steps - 1)
@@ -108,33 +154,74 @@ def post_sweep(
     )
 
 
-@app.post("/api/extract")
-async def post_extract(file: UploadFile) -> dict:
-    """Extract roof facts from an uploaded selectable-text PDF, validated in code."""
-    from src.extract import read_pdf_pages
+class ExtractResponse(BaseModel):
+    document_id: str
+    page_count: int
+    pages: list[str]
+    fields: list[InputField]
+    structured: bool
 
-    data = await file.read()
+
+@app.post("/api/extract", response_model=ExtractResponse)
+async def post_extract(file: UploadFile, structured: bool = False) -> ExtractResponse:
+    """Extract selectable PDF text; optionally identify source-backed fields with AI.
+
+    The default path is deterministic pypdf text extraction and sends nothing to
+    a third-party LLM. `structured=true` makes one configured LLM call, then code
+    validates every returned quote against the extracted page text.
+    """
+    chunks: list[bytes] = []
+    byte_count = 0
+    while True:
+        chunk = await file.read(1024 * 1024)
+        if not chunk:
+            break
+        byte_count += len(chunk)
+        if byte_count > _MAX_PDF_BYTES:
+            raise HTTPException(status_code=413, detail="PDF must be 10 MB or smaller.")
+        chunks.append(chunk)
+    data = b"".join(chunks)
+    filename = file.filename or "upload.pdf"
+    if not data.startswith(b"%PDF-"):
+        raise HTTPException(status_code=415, detail="The uploaded file is not a valid PDF.")
+
     try:
-        pages = read_pdf_pages(data)
+        pages = read_pdf_pages_isolated(
+            data,
+            max_pages=_MAX_PDF_PAGES,
+            max_characters=_MAX_EXTRACTED_CHARACTERS,
+            max_seconds_per_page=3.0,
+            total_timeout_seconds=25.0,
+        )
+    except PdfLimitExceeded as exc:
+        raise HTTPException(status_code=413, detail=str(exc)) from exc
     except Exception as exc:  # noqa: BLE001 - surface a clean 400 to the UI
         raise HTTPException(status_code=400, detail=f"Could not read PDF: {exc}") from exc
 
-    if not any(p.strip() for p in pages):
+    if not any(page.strip() for page in pages):
         raise HTTPException(
             status_code=422,
-            detail="No selectable text found. This demo needs a text-based PDF, not a scan.",
+            detail="No selectable text found. Upload a text-based PDF or enter the information manually.",
         )
 
-    try:
-        fields = extract_fields(pages, document_id=file.filename or "upload.pdf")
-    except Exception as exc:  # noqa: BLE001
-        raise HTTPException(status_code=502, detail=f"Extraction failed: {exc}") from exc
+    fields: list[InputField] = []
+    if structured:
+        try:
+            fields = extract_fields(
+                pages,
+                document_id=filename,
+                source_type="uploaded_document",
+            )
+        except Exception as exc:  # noqa: BLE001
+            raise HTTPException(status_code=502, detail=f"Structured extraction failed: {exc}") from exc
 
-    return {
-        "document_id": file.filename or "upload.pdf",
-        "page_count": len(pages),
-        "fields": [f.model_dump() for f in fields],
-    }
+    return ExtractResponse(
+        document_id=filename,
+        page_count=len(pages),
+        pages=pages,
+        fields=fields,
+        structured=structured,
+    )
 
 
 class CoordinateRequest(BaseModel):

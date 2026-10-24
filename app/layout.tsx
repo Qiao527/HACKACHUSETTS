@@ -3,11 +3,12 @@ import './globals.css';
 import { SiteNav } from './components/SiteNav';
 import { SiteFooter } from './components/SiteFooter';
 import { ScenarioProvider } from './components/ScenarioProvider';
+import { DocumentDrawer } from './components/DocumentDrawer';
 
 export const metadata: Metadata = {
   title: 'SolarAlign',
   description:
-    'Who pays, who benefits, and how roof timing changes a rooftop solar deal — with every input traced to evidence.',
+    'Collect project evidence, compare roof and solar timing, and align value so more rooftop solar projects can move forward.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -20,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body>
+      <body className="bg-canvas">
         <ScenarioProvider>
           <a
             href="#main"
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main id="main" className="min-h-[calc(100vh-72px-220px)]">
             {children}
           </main>
+          <DocumentDrawer />
           <SiteFooter />
         </ScenarioProvider>
       </body>

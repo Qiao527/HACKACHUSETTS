@@ -61,13 +61,12 @@ describe('pct', () => {
 });
 
 describe('withFieldValue', () => {
-  it('overrides the value and marks the field human_supplied, keeping the original evidence', () => {
+  it('overrides the value and marks the field human_supplied without claiming the old citation supports it', () => {
     const next = withFieldValue(baseInput(), 'roof_replacement_cost', 400000);
     expect(next.roof_replacement_cost.value).toBe(400000);
     expect(next.roof_replacement_cost.status).toBe('human_supplied');
     expect(next.roof_replacement_cost.confirmed_by_user).toBe(true);
-    // original evidence preserved
-    expect(next.roof_replacement_cost.evidence?.document_id).toBe('doc.pdf');
+    expect(next.roof_replacement_cost.evidence).toBeNull();
   });
 });
 

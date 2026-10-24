@@ -20,12 +20,12 @@ LLMCallable = Callable[[str, dict[str, Any]], dict[str, Any]]
 REQUIRED_LABELS = ["not legal advice", "eligibility not verified"]
 
 DEFAULT_TERMS = [
-    "Roof rights and who holds capital responsibility for the roof and the array.",
-    "Meter topology and the account holders behind each meter.",
-    "Utility territory and the building's rate class.",
-    "Credit-allocation restrictions on the utility account.",
-    "Lease duration and any consent required from tenants.",
-    "How charges and savings are treated under the current lease.",
+    "Roof condition, roof rights, structural review, and responsibility for roof and array work.",
+    "Meter topology, account holders, and where on-site generation can offset load.",
+    "Utility territory, rate class, interconnection, and credit-allocation restrictions.",
+    "Project financing, lease duration, access, and any participation or consent requirements.",
+    "How charges, operational responsibilities, and energy savings are treated.",
+    "Current incentive, tax, permitting, and eligibility requirements.",
 ]
 
 _NUMBER_RE = re.compile(r"-?\$?\d[\d,]*(?:\.\d+)?%?")
@@ -140,13 +140,15 @@ def validate_output(output: CoordinatorOutput, result: EngineResult) -> Coordina
 
 def _build_prompt(result: EngineResult, language: Language) -> str:
     return (
-        "You coordinate a solar allocation decision. You are given ONLY the engine "
-        "result below as JSON. You MUST NOT compute, interpolate, or invent any "
-        "number. Copy numbers from the engine result verbatim. If you mention a "
-        "dollar figure or percentage, it must already appear in the engine result.\n"
-        f"Write a plain-language owner explanation and tenant explanation in language={language}. "
-        "Propose a tenant-share range that sits INSIDE mutual_benefit_range (or none if it is null). "
-        "List lease, meter and utility terms to confirm.\n"
+        "You help a building team move a viable rooftop solar project forward. You are given ONLY "
+        "the engine result below as JSON. You MUST NOT compute, interpolate, round differently, or "
+        "invent any number. A dollar figure or percentage must already appear in the engine result.\n"
+        f"Write plain-language explanations in language={language}. Use owner_explanation for the "
+        "project/capital side and tenant_explanation for building electricity users. Frame both around "
+        "broader solar adoption, practical alignment, and unresolved implementation facts—not maximizing "
+        "landlord profit. Propose a value-share range strictly inside mutual_benefit_range, or none if it "
+        "is null. Make clear that the range is not consent, a contract, or an eligibility finding. List "
+        "roof, structural, meter, utility, financing, access, and participation terms to verify.\n"
         "Return JSON matching: {scenario_id, proposed_range:[lo,hi]|null, rationale, "
         "owner_explanation, tenant_explanation, language, terms_to_confirm:[...], "
         "labels:[\"not legal advice\",\"eligibility not verified\"]}.\n\n"

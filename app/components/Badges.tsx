@@ -1,74 +1,29 @@
 import type { SourceType, Status } from '../lib/contract';
 
-// Status/label badges always pair colour with text and an icon/shape so colour
-// is never the only signal (accessibility, ui-rules.md).
-
 export function SourceBadge({ source }: { source: SourceType }) {
   const map: Record<SourceType, { label: string; cls: string; mark: string }> = {
-    synthetic_document: {
-      label: 'synthetic',
-      cls: 'border-warn text-warn bg-[#9a6a0014]',
-      mark: '◆',
-    },
-    assumption: {
-      label: 'assumption',
-      cls: 'border-slate text-ink-secondary bg-[#70707314]',
-      mark: '≈',
-    },
-    public_record: {
-      label: 'public record',
-      cls: 'border-primary text-primary bg-[#5266eb14]',
-      mark: '●',
-    },
-    api_fixture: {
-      label: 'cached API',
-      cls: 'border-periwinkle text-ink-secondary bg-[#9cb4e824]',
-      mark: '⤓',
-    },
+    synthetic_document: { label: 'synthetic', cls: 'border-warn bg-[#8a620014] text-warn', mark: '◆' },
+    uploaded_document: { label: 'uploaded PDF', cls: 'border-primary bg-primary-soft text-primary', mark: '▣' },
+    assumption: { label: 'assumption', cls: 'border-slate bg-mint-wash text-ink-secondary', mark: '≈' },
+    public_record: { label: 'public record', cls: 'border-primary bg-primary-soft text-primary', mark: '●' },
+    api_fixture: { label: 'cached API', cls: 'border-mint-accent bg-mint-soft text-ink-secondary', mark: '⤓' },
   };
-  const m = map[source];
-  return (
-    <span className={`badge ${m.cls}`}>
-      <span aria-hidden>{m.mark}</span>
-      {m.label}
-    </span>
-  );
+  const value = map[source];
+  return <span className={`badge ${value.cls}`}><span aria-hidden>{value.mark}</span>{value.label}</span>;
 }
 
 export function StatusBadge({ status }: { status: Status }) {
   const map: Record<Status, { label: string; cls: string; mark: string }> = {
-    confirmed: { label: 'confirmed', cls: 'border-ok text-ok bg-[#2f8f5b14]', mark: '✓' },
-    extracted_unconfirmed: {
-      label: 'needs review',
-      cls: 'border-warn text-warn bg-[#9a6a0014]',
-      mark: '○',
-    },
-    human_supplied: {
-      label: 'edited by you',
-      cls: 'border-primary text-primary bg-[#5266eb14]',
-      mark: '✎',
-    },
-    missing: { label: 'missing', cls: 'border-danger text-danger bg-[#b4324a14]', mark: '!' },
-    conflicting: {
-      label: 'conflict',
-      cls: 'border-danger text-danger bg-[#b4324a14]',
-      mark: '≠',
-    },
+    confirmed: { label: 'confirmed', cls: 'border-ok bg-primary-soft text-ok', mark: '✓' },
+    extracted_unconfirmed: { label: 'needs review', cls: 'border-warn bg-[#8a620014] text-warn', mark: '○' },
+    human_supplied: { label: 'entered by you', cls: 'border-primary bg-primary-soft text-primary', mark: '✎' },
+    missing: { label: 'missing', cls: 'border-danger bg-danger-soft text-danger', mark: '!' },
+    conflicting: { label: 'conflict', cls: 'border-danger bg-danger-soft text-danger', mark: '≠' },
   };
-  const m = map[status];
-  return (
-    <span className={`badge ${m.cls}`}>
-      <span aria-hidden>{m.mark}</span>
-      {m.label}
-    </span>
-  );
+  const value = map[status];
+  return <span className={`badge ${value.cls}`}><span aria-hidden>{value.mark}</span>{value.label}</span>;
 }
 
 export function LegalLabels() {
-  return (
-    <div className="flex flex-wrap gap-2">
-      <span className="badge border-slate text-ink-secondary">not legal advice</span>
-      <span className="badge border-slate text-ink-secondary">eligibility not verified</span>
-    </div>
-  );
+  return <div className="flex flex-wrap gap-2"><span className="badge border-slate text-ink-secondary">not legal or structural advice</span><span className="badge border-slate text-ink-secondary">eligibility not verified</span></div>;
 }

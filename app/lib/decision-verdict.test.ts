@@ -42,30 +42,30 @@ describe('getDecisionVerdict', () => {
     ['roof-year-4 19%', 968.62, 11_257.7],
   ])('labels %s as both modeled outcomes positive', (_name, owner, tenant) => {
     expect(getDecisionVerdict(result(owner, tenant)).message).toBe(
-      'Both modeled financial outcomes are positive.',
+      'Both modeled project and building-user outcomes are positive.',
     );
   });
 
   it('labels 0% tenant share as zero tenant savings', () => {
     expect(getDecisionVerdict(result(126_334.66, 0)).message).toBe(
-      'Tenant first-year savings are zero.',
+      'Building-user first-year savings are zero.',
     );
   });
 
   it('labels a negative current owner outcome precisely', () => {
     expect(getDecisionVerdict(result(-5, 12_000)).message).toBe(
-      'Owner incremental NPV is negative.',
+      'Project-side incremental NPV is negative.',
     );
   });
 
   it('reports when no Positive-Outcome Range exists', () => {
     expect(getDecisionVerdict(result(-5, 0, null)).message).toBe(
-      'No Positive-Outcome Range exists.',
+      'No Positive-Outcome Range exists for the current inputs.',
     );
   });
 
   it('reports an update while no current result exists', () => {
-    expect(getDecisionVerdict(null).message).toBe('Updating current scenario…');
+    expect(getDecisionVerdict(null).message).toBe('Updating current project…');
   });
 });
 
