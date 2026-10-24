@@ -13,7 +13,7 @@ SolarAlign mixes two kinds of work that fail in different ways: an LLM that read
 | | |
 |---|---|
 | Steering files | 8, using all four inclusion modes |
-| Specs | 1 full requirements-first spec: 10 requirements, 101 EARS criteria, 23 correctness properties, 13 tasks / 53 sub-tasks (`.kiro/specs/document-extraction/`) |
+| Specs | 1 full requirements-first spec: 10 requirements, 101 EARS criteria, 23 correctness properties, 14 tasks / 57 sub-tasks (`.kiro/specs/document-extraction/`) |
 | Analyze Requirements | 1 loophole found and closed before design |
 | Hooks | 5 configured; 2 fixed by Kiro on day one; seen firing on spec writes, contract saves, and blocking a `.kiro` ignore in the CLI |
 | Tests on `main` | 79 Python (12 Hypothesis property tests, 27 engine reference goldens at $0.01) + 30 Vitest |
@@ -35,11 +35,11 @@ SolarAlign mixes two kinds of work that fail in different ways: an LLM that read
 1. Kiro noticed `InputField.value` was float-only while the roof report contains dates, text and booleans. Because steering marks the contract as frozen, Kiro refused to edit it and escalated to the contract owner. We added `text_value` (commit `fa7bff9`).
 2. **Analyze Requirements** found that a roof-age value could be accepted without evidence. We added an acceptance criterion so it becomes `missing` with a request for roofing records.
 
-**How requirements became checks.** Version 2 has 10 requirements and 101 criteria, a `design.md` with 23 correctness properties, and a `tasks.md` with 13 tasks. Each property names the requirements it validates, and each property-test task names its property. Example chain: Requirement 3.13 (compare the quote to the page with no case folding) → Property 10 (any non-whitespace change, including a case flip, makes the field `missing`) → Task 4.12 (property test for quote matching).
+**How requirements became checks.** Version 2 has 10 requirements and 101 criteria, a `design.md` with 23 correctness properties, and a `tasks.md` with 14 tasks and 57 sub-tasks (published revision). Each property names the requirements it validates, and each property-test task names its property. Example chain: Requirement 3.13 (compare the quote to the page with no case folding) → Property 10 (any non-whitespace change, including a case flip, makes the field `missing`) → Task 4.12 (property test for quote matching).
 
 **How it compared to vibe coding.** We measured both (table at the end of the usage log). The spec found 2 problems before any code existed. Later, when the one-shot implementation lowercased quotes, the spec told us exactly which rule it broke (Requirement 3.1, "exact-character substring"). Vibe mode was faster for the UI, but its one post-"done" bug only appeared when we rendered the real chart. Our takeaway: spec mode for anything that decides a number, vibe mode for presentation, and a real-render check either way.
 
-**Honest scope cut.** We wrote one spec, not three, and did not execute the 53 extraction sub-tasks: rewriting extraction hours before the deadline was riskier than one focused, tested fix.
+**Honest scope cut.** We wrote one spec, not three, and did not execute the 57 extraction sub-tasks: rewriting extraction hours before the deadline was riskier than one focused, tested fix.
 
 ## 3. Agent hooks
 
@@ -78,4 +78,4 @@ We configured the `fetch` MCP server (`.kiro/settings/mcp.json`) so Kiro could r
 
 ## 7. What we would do next
 
-Execute the 53 extraction sub-tasks under `run-tests-after-task`, add engine and coordinator specs, and turn the coordinator's example tests into Hypothesis properties.
+Execute the 57 extraction sub-tasks under `run-tests-after-task`, add engine and coordinator specs, and turn the coordinator's example tests into Hypothesis properties.
